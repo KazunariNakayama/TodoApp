@@ -1,0 +1,27 @@
+{
+  "name": "todo-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch backend/src/index.ts",
+    "build": "tsc",
+    "start": "pnpm --filter frontend start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.10.0",
+  "description": "",
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.6",
+    "prisma": "^6.7.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.4"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.7.0",
+    "@tailwindcss/vite": "^4.1.6",
+    "tailwindcss": "^4.1.6"
+  }
+}

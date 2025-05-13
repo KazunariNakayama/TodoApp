@@ -1,0 +1,35 @@
+// prisma/schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+model Task {
+  id         Int         @id @default(autoincrement())
+  title      String      @db.VarChar(20)
+  detail     String      @db.VarChar(255)
+  status     TaskStatus  @default(TODO)
+  due_date   DateTime
+  created_at DateTime    @default(now())
+  subtasks   Subtask[]
+}
+
+model Subtask {
+  id         Int         @id @default(autoincrement())
+  task       Task        @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId     Int
+  title      String      @db.VarChar(20)
+  detail     String      @db.VarChar(255)
+  status     TaskStatus  @default(TODO)
+  created_at DateTime    @default(now())
+}
