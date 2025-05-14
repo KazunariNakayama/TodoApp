@@ -5,6 +5,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { UserFormInputs } from '../types.ts';
 
+//カレンダー直書き
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css"
+
+
 // バリデーションスキーマ
 const schema = yup.object({
   name: yup.string().required('名前は必須です'),

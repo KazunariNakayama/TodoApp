@@ -19,10 +19,14 @@ export interface UpdateTaskInput {
   title?: string;
   description?: string;
   status?: TaskStatus;
-} 
+}
 
-/*
-export interfae FormInputs = {
+export interface UserFormInputs {
   name: string;
   email: string;
-};*/
+}
+
+export interface DateForm {
+  startDate: Date;
+  endDate: Date;
+}
