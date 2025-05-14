@@ -1,5 +1,7 @@
-import { PrismaClient, TaskStatus } from '@prisma/client';
+import { PrismaClient, TaskStatus, } from '@prisma/client';
 import { CustomError } from '../utils/customError';
+import { string } from 'zod';
+
 
 const prisma = new PrismaClient();
 
@@ -18,6 +20,110 @@ export const getTasks = async () => {
    */
 }
 
+//due_date: string, 
+export const getTasksSearch = async (
+  title: string,
+  status: string,
+  due_date: string
+) => {
+  const conditions = [];
+  const params = [];
+
+  if (title) {
+    conditions.push(`(title LIKE $${params.length + 1} OR detail LIKE $${params.length + 1})`);
+    params.push(`%${title}%`);
+  }
+
+  if (status) {
+    conditions.push(`status = $${params.length + 1}::"TaskStatus"`);
+    params.push(status);
+  }
+
+    if (due_date) {
+    const parsed = new Date(due_date);
+    if (!isNaN(parsed.getTime())) {
+        const endDate = new Date(parsed);
+        endDate.setDate(endDate.getDate() + 1);
+
+        conditions.push(`due_date < $${params.length + 1}::timestamp`);
+        params.push(endDate.toISOString());
+    } else {
+        throw new Error(`Invalid due_date format: ${due_date}`);
+    }
+    }
+
+
+  const whereClause = conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : '';
+  const query = `SELECT * FROM "Task" ${whereClause};`;
+
+  const tasks = await prisma.$queryRawUnsafe(query, ...params) as any[];
+
+  return tasks;
+};
+
+
+
+
+
+// export const getTasksSearch = async (title: string, due_date: string, /*status: string*/ ) => {
+
+//     const tasks = await prisma.$queryRaw`SELECT * FROM "Task" WHERE title LIKE ${'%' + title + '%'}
+//     AND detail LIKE ${'%' + title + '%'}
+//     AND due_date LIKE ${'%' + due_date + '%'}` as any[];
+//     /*AND status LIKE ${'%' + status + '%'}*/
+
+//     // const tasks = await prisma.$queryRaw`SELECT * FROM "Task"` as any[];
+//     // if (title) {
+//     //     const tasks = await prisma.$queryRaw`SELECT * FROM "Task" WHERE title LINE query.title` as any[];
+//     // }
+//     // if (!tasks || tasks.length === 0) {
+//     //     throw new CustomError('No tasks found', 404);
+//     // }
+//     return tasks;
+// }
+
+
+    
+    // // const andConditions = [];
+    // if (query.titile) {
+    //     andConditions.push({
+    //     title: { contains: query.title },
+    //     });
+    //     andConditions.push({
+    //     detail: { contains: query.detail },
+    //     });
+//     }
+//     if (query.due_date) {
+//         andConditions.push({
+//         due_date: { contains: { equals: new Date(query.due_date) } },
+//         });
+//     }
+//     if (query.status) {
+//         andConditions.push({
+//         status: { contains: { equals: query.status as TaskStatus } },
+//         });
+//     }
+
+//     const tasks = await prisma.task.findMany({
+//         where: andConditions.length > 0 ? { AND: andConditions } : {},
+//     });
+
+//   return tasks
+// };const tasks = await prisma.$queryRaw`SELECT * FROM "Task" WHERE titile LINE query.titile` as any[];
+    // if (!tasks || tasks.length === 0) {
+    //     throw new CustomError('No tasks found', 404);
+    // }
+    // return tasks;
+    /*
+   const tasks = await prisma.task.findMany();
+   if(!tasks){
+    throw new CustomError('Failed to fetch tasks', 500);
+   }
+   return tasks;
+   */
+
+
+
 export const getIdTasks = async (id: number) => {
     const tasks = await prisma.$queryRaw`SELECT * FROM "Task" WHERE id = ${id}` as any[];
     if (tasks.length === 0) {
@@ -32,13 +138,24 @@ export const getIdSubTasks = async (id: number) => {
 }
 
 
-export const createTask = async (body: { title: string; detail: string; due_date: string }) => {
+export const createTask = async (body: { title: string; detail: string; due_date: string; status: string }) => {
+    const task = await prisma.$queryRawUnsafe(
+    `INSERT INTO "Task" (title, detail, due_date, status, created_at)
+    VALUES ($1, $2, $3, $4::"TaskStatus", NOW())
+    RETURNING *` ,
+        body.title,
+        body.detail,
+        new Date(body.due_date),
+        body.status
+    );
+    /*
     const task = await prisma.$queryRaw`
         INSERT INTO "Task" (title, detail, due_date, status, created_at)
-        VALUES (${body.title}, ${body.detail}, ${new Date(body.due_date)}, 'TODO'::"TaskStatus", NOW())
-        RETURNING *
+        VALUES (${body.title}, ${body.detail}, ${new Date(body.due_date)}, ${body.status}, NOW())
+        RETURNING 
     ` as any[];
     return task[0];
+*/
 }
 
 export const updateTask = async (id: number, body: { title: string; detail: string; due_date: string; status: string }) => {

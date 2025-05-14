@@ -1,7 +1,13 @@
 // src/routes/tasks.ts
 import { Hono } from 'hono';
+import { PrismaClient, TaskStatus, } from '@prisma/client';
+import { CustomError } from '../utils/customError';
+const prisma = new PrismaClient(); 
+
 //import { PrismaClient /*, TaskStatus */ } from '@prisma/client';
-import {getTasks, createTask, updateTask, deleteTask, getSubtasks, createSubtask, getIdTasks, getIdSubTasks} from '../model/tasksModel'; 
+import {getTasks, createTask, updateTask, deleteTask, getSubtasks, createSubtask, getIdTasks, getIdSubTasks, getTasksSearch} from '../model/tasksModel'; 
+import { stat } from 'fs';
+import { duplexPair } from 'stream';
 //import { CustomError } from '../utils/customError';
 //const prisma = new PrismaClient();
 const tasks = new Hono();
@@ -30,13 +36,35 @@ tasks.get('/', async (c) => {
   //return c.json({ error: 'Failed to fetch tasks' }, 500);
 });
 
-// 指定タスクの取得
+// // タスク一覧をsearchで取得
+tasks.get('/search', async (c) => {
+
+  const title = c.req.query('title') || ''; // 未指定でも安全なように空文字に
+  const due_date = c.req.query('due_date') || ''; // 未指定でも安全なように空文字に
+  const status = c.req.query('status') || ''; // 未指定でも安全なように空文字に
+
+
+  const tasks = await getTasksSearch(title, status, due_date);
+
+  //const tasks = await prisma.$queryRaw`SELECT * FROM "Task" WHERE title LIKE ${'%' + title + '%'}`as any[];
+
+  // const tasks = await prisma.$queryRaw`
+  //   SELECT * FROM "Task"
+  //   WHERE title LIKE ${'%' + title + '%'}
+  // ` as any[];
+
+  return c.json(tasks);
+});
+
+//指定タスクの取得
 tasks.get('/:id', async (c) => {
   const id = parseInt(c.req.param('id'));
   const tasks = await getIdTasks(id);
   const subtasks = await getIdSubTasks(id);
   return c.json({tasks,subtasks});
 });
+
+
 
 // タスクの作成
 tasks.post('/', async (c) => {
