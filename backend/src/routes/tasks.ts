@@ -36,6 +36,7 @@ tasks.get('/', async (c) => {
   //return c.json({ error: 'Failed to fetch tasks' }, 500);
 });
 
+
 // // タスク一覧をsearchで取得
 tasks.get('/search', async (c) => {
 
@@ -55,6 +56,9 @@ tasks.get('/search', async (c) => {
 
   return c.json(tasks);
 });
+
+
+
 
 //指定タスクの取得
 tasks.get('/:id', async (c) => {

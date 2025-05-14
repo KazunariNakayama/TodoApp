@@ -35,7 +35,7 @@ const App = () => {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
       if (!response.ok) throw new Error('Failed to fetch tasks');
       const data = await response.json();
       setTasks(data);
@@ -63,6 +63,7 @@ const options = [
   { value: 'todo', label: '未完了' },
   { value: 'in_progress', label: '進行中' },
   { value: 'Done', label: '完了' },
+  { value: '', label:'選択を外す'}
 ]
 
   return (
