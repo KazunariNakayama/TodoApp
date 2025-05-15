@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { PrismaClient, TaskStatus, } from '@prisma/client';
 import { CustomError } from '../utils/customError';
 const prisma = new PrismaClient(); 
-
+  
 //import { PrismaClient /*, TaskStatus */ } from '@prisma/client';
 import {getTasks, createTask, updateTask, deleteTask, getSubtasks, createSubtask, getIdTasks, getIdSubTasks, getTasksSearch} from '../model/tasksModel'; 
 import { stat } from 'fs';
@@ -36,6 +36,7 @@ tasks.get('/', async (c) => {
   //return c.json({ error: 'Failed to fetch tasks' }, 500);
 });
 
+
 // // タスク一覧をsearchで取得
 tasks.get('/search', async (c) => {
 
@@ -55,6 +56,9 @@ tasks.get('/search', async (c) => {
 
   return c.json(tasks);
 });
+
+
+
 
 //指定タスクの取得
 tasks.get('/:id', async (c) => {

@@ -21,6 +21,7 @@ export interface UpdateTaskInput {
   status?: TaskStatus;
 }
 
+//↓これはいる？削除予定
 export interface UserFormInputs {
   name: string;
   email: string;
@@ -30,3 +31,12 @@ export interface DateForm {
   startDate: Date;
   endDate: Date;
 }
+
+export interface SearchType {
+  keyword: string;
+  due_date: Date;
+  status: TaskStatus;
+}
+
+
+
