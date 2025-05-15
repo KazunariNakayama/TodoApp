@@ -3,12 +3,32 @@ import { Button } from '@mui/material';
 import DataTable from 'react-data-table-component';
 import { Task } from '../types';
 
-interface TaskListProps {
-    tasks: Task[];
-    loading: boolean;
-}
+// interface TaskListProps {
+//     tasks: Task[];
+//     loading: boolean;
+// }
 
-const columns = [
+type MyTableProps = {
+  tasks: Task[];
+  loading: boolean;
+  onDelete: (id) => void;
+};
+
+//interface MyTable  { tasks:TaskListProps, loading:TaskListProps, onDelete:(parame: number) => void; } 
+// interface handleSubmit  {
+//     onDelete({id});
+// } 
+
+
+
+
+
+const MyTable = ( {tasks, loading , onDelete }:MyTableProps) => {    
+    const handleSubmit = (id: string) => (event: React.FormEvent) => {
+    event.preventDefault()
+    onDelete({id});
+    } 
+    const columns = [
     {
         name: `タスク名`,
         selector: (row: Task) => row.title,
@@ -41,18 +61,14 @@ const columns = [
             <Button
                 variant="contained"
                 color="secondary"
-                onClick={() => {
-                    // TODO: Implement delete
-                }}
+                value={row.id}
+                onClick={() => handleSubmit(row.id)}
             >
                 削除
             </Button>
-        ),
-    },
-];
-
-
-const MyTable = ({ tasks, loading }: TaskListProps) => {    
+            ),
+        },
+    ];
     return (
         <DataTable
             title="タスク一覧"
@@ -65,6 +81,9 @@ const MyTable = ({ tasks, loading }: TaskListProps) => {
         />
     );
 };
+
+
+export default MyTable;
 
 /*
     {
@@ -116,7 +135,6 @@ const MyTable = () => {
 };
 */
 
-export default MyTable;
 
 
 /*

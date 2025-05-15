@@ -10,7 +10,7 @@ interface UserFomeProps {
     onSearch: (parames: {keyword: string, due_date: string , status: string  }) => void;
 }
 
-const UserFormProps = ({onSearch,}) => {
+const UserFormProps = ({onSearch}) => {
     const [keyword, setKeyword] = useState('');
     const initialDate = new Date();
     const [due_date, setDue_date] = useState(initialDate);
@@ -43,6 +43,8 @@ const UserFormProps = ({onSearch,}) => {
         { value: '', label:'非選択'}
     ]
 
+    const filteredOptions = options.find((opt) => opt.value === status.toLowerCase())
+
     const handleSubmit = (event) => {
         event.preventDefault();
         onSearch({keyword, due_date, status});
@@ -62,10 +64,10 @@ const UserFormProps = ({onSearch,}) => {
             {/* .toLowerCaseは小文字化する処理 */}
             <Select
                 options={options}
-                value={options.find((o) => o.value === status.toLowerCase())}
+                value={filteredOptions}
                 onChange={handlestatusChange}
             />
-            <Button variant="contained" color="primary" onClick={handleSubmit}></Button>
+            <Button variant="contained" color="primary" onClick={handleSubmit}>検索</Button>
         </div>
         ); 
 }

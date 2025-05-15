@@ -22,7 +22,7 @@ import Select from 'react-select'
 
 
 const App = () => {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>();
   const [loading, setLoading] = useState(true);
   
   //検索関連の宣言
@@ -111,6 +111,42 @@ const App = () => {
 
 
   <UserFormProps onSearch={handleSearch} />
+  
+
+  const handleDelete = async (params: string ) => {
+    console.log('id:', params);
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/tasks/${params}}`,{
+          method:`DELETE`,
+        }
+      );
+
+      if (!response.ok) throw new Error('Failed to Delete Task');
+      // const data = await response.json();
+      // setTasks(data); // ← これが App の状態を更新！
+      
+      try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
+      if (!response.ok) throw new Error('Failed to fetch tasks');
+      const data = await response.json();
+      setTasks(data);
+    } catch (err) {
+      console.error('Failed to fetch tasks:', err);
+    } finally {
+      setLoading(false);
+    }
+
+      
+    } catch (err) {
+      console.error('Failed to fetch tasks:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete}  />
 
 
   return (
@@ -126,7 +162,7 @@ const App = () => {
       {/* <h2>ステータス検索</h2>
       <Select options={options} /> */} 
       <h2>ユーザー一覧</h2>
-      <MyTable tasks={tasks} loading={loading} />
+      <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
     </div>
   );
 };
