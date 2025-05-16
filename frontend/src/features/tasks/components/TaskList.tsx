@@ -11,7 +11,7 @@ import { Task } from '../types';
 type MyTableProps = {
   tasks: Task[];
   loading: boolean;
-  onDelete: (id) => void;
+  onDelete: (id: string) => void;
 };
 
 //interface MyTable  { tasks:TaskListProps, loading:TaskListProps, onDelete:(parame: number) => void; } 
@@ -24,10 +24,16 @@ type MyTableProps = {
 
 
 const MyTable = ( {tasks, loading , onDelete }:MyTableProps) => {    
-    const handleSubmit = (id: string) => (event: React.FormEvent) => {
-    event.preventDefault()
-    onDelete({id});
-    } 
+    // const handleDelete = (id: string) => (event: React.FormEvent) => {
+    //     event.preventDefault()
+    //     console.log('削除ボタンが押されました:', id);
+    //     onDelete(id);
+    // }
+    // const handleDelete = (id: string) => {
+    // console.log('削除ボタンが押されました:', id);
+    // onDelete(id);
+    // }
+
     const columns = [
     {
         name: `タスク名`,
@@ -62,7 +68,7 @@ const MyTable = ( {tasks, loading , onDelete }:MyTableProps) => {
                 variant="contained"
                 color="secondary"
                 value={row.id}
-                onClick={() => handleSubmit(row.id)}
+                onClick={() => {console.log('削除ボタンon'); onDelete(row.id)}}
             >
                 削除
             </Button>

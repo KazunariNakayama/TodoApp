@@ -51,24 +51,25 @@ const UserFormProps = ({onSearch}) => {
     }
 
     return (
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <form onSubmit={handleSubmit}>
+        <div >
+            <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                 <label>
                         <input type="text" value={keyword} onChange={handlekeyChange} />
                 </label>
-            </form>
             <DatePicker
                 selected={due_date}
                 onChange={handledateChange}
-            />
+                />
             {/* .toLowerCaseは小文字化する処理 */}
             <Select
                 options={options}
                 value={filteredOptions}
                 onChange={handlestatusChange}
-            />
-            <Button variant="contained" color="primary" onClick={handleSubmit}>検索</Button>
+                />
+            <Button type="submit" variant="contained" color="primary" /*onClick={handleSubmit}*/>検索</Button>
+                </form>
         </div>
+        
         ); 
 }
 

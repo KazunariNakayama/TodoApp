@@ -8,7 +8,7 @@ import { UserFormInputs, SearchType, } from '../types.ts';
 
 
 import UserFormProps from '../components/Taskquery2.tsx';
-
+import CreateForm from '../components/TaskCreate.tsx';
 
 //カレンダー直書き
 import DatePicker from "react-datepicker"
@@ -148,11 +148,57 @@ const App = () => {
 
   <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete}  />
 
+  const [showModal, setShowModal]=useState(false);
+  const ShowModal = () => {
+    setShowModal(true);
+  }
+
+  const handleCreate = async (params: { title: string; detail: string; due_date: string; status: string }) => {
+    console.log('params:', params);
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/tasks`,{
+          method:`POST`,
+          headers:{
+            'Content-Type':'application/json'
+          },
+          body: JSON.stringify(params)
+        }
+      );
+
+      if (!response.ok) throw new Error('Failed to Create Task');
+      // const data = await response.json();
+      // setTasks(data); // ← これが App の状態を更新！
+      
+      try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
+      if (!response.ok) throw new Error('Failed to fetch tasks');
+      const data = await response.json();
+      setTasks(data);
+    } catch (err) {
+      console.error('Failed to fetch tasks:', err);
+    } finally {
+      setLoading(false);
+    }
+    } catch (err) {
+      console.error('Failed to fetch tasks:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  <CreateForm modalbool={showModal} setModalbool={setShowModal} onCreate={handleCreate} />
+
+
 
   return (
     <div>
+      <button onClick={ShowModal}>タスク追加ボタン</button>
+      <CreateForm modalbool={showModal} setModalbool={setShowModal} onCreate={handleCreate}/>
       <h2>検索フォーム</h2>
-      <UserFormProps onSearch={handleSearch}/>
+      <button onClick={ShowModal}>Open Modal</button>
+      <UserFormProps onSearch={handleSearch} />
       {/* <UserForm onSubmit={handleFormSubmit} /> */}
       {/* <h2>期日検索</h2> */}
       {/* <DateForm onSubmit={handleDueSubmit}/> */}
