@@ -1,3 +1,33 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+//import AboutPage from './pages/AboutPage';
+//import NotFound from './pages/NotFound';
+import TaskListPage from './features/tasks/pages/TaskListPage.tsx';
+import DetailePage from './features/tasks/pages/DetailPage.tsx';
+
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<TaskListPage />} />
+        <Route path="/about" element={<DetailePage />} />
+        {/* <Route path="*" element={<NotFound />} />  */}
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
+
+
+
+
+
+
+
+
+
+
 // import React, { useState } from 'react';
 
 // function App() {

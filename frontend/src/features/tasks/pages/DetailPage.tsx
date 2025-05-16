@@ -188,6 +188,7 @@ const App = () => {
     }
   };
   
+  <CreateForm modalbool={showModal} setModalbool={setShowModal} onCreate={handleCreate} />
 
 
 
