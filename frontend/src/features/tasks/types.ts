@@ -8,6 +8,16 @@ export interface Task {
   selector?: string;
 }
 
+export interface SubTask {
+  id: string;
+  task: Task;
+  taskID: string;
+  title: string;
+  detail: string;
+  status: TaskStatus;
+}
+
+
 export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
 
 export interface CreateTaskInput {

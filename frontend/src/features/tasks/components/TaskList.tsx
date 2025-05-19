@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 import DataTable from 'react-data-table-component';
 import { Task } from '../types';
+import { Link } from "react-router-dom";
 
 // interface TaskListProps {
 //     tasks: Task[];
@@ -38,6 +39,11 @@ const MyTable = ( {tasks, loading , onDelete }:MyTableProps) => {
     {
         name: `タスク名`,
         selector: (row: Task) => row.title,
+        cell: (row) => (
+      <Link to={`/about/${row.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+        {row.title}
+      </Link>
+    ),
         sortable: true,
         filter: true,
     },
@@ -66,7 +72,7 @@ const MyTable = ( {tasks, loading , onDelete }:MyTableProps) => {
         cell: (row: Task) => (
             <Button
                 variant="contained"
-                color="secondary"
+                color="error"
                 value={row.id}
                 onClick={() => {console.log('削除ボタンon'); onDelete(row.id)}}
             >

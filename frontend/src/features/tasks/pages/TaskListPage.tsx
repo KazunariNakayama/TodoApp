@@ -90,6 +90,7 @@ const App = () => {
     setLoading(true);
     try {
       const query = new URLSearchParams({
+        id: '',
         title: params.keyword,
         due_date: params.due_date,
         status: params.status,
@@ -98,6 +99,7 @@ const App = () => {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/api/tasks/search?${query}`
       );
+      console.log(`${process.env.REACT_APP_API_URL}/api/tasks/search?${query}`)
 
       if (!response.ok) throw new Error('Failed to fetch tasks');
       const data = await response.json();
