@@ -208,7 +208,6 @@ const App = () => {
       {/* <SimpleDatePicker selected={startDate} onChange={handleChange}/>       */}
       {/* <h2>ステータス検索</h2>
       <Select options={options} /> */} 
-      <h2>ユーザー一覧</h2>
       <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
     </div>
   );
