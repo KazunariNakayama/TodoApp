@@ -85,7 +85,7 @@ const CreateForm : React.FC<Props> = ({ modalbool, setModalbool, onCreate }) => 
                 value={filteredOptions}
                 onChange={handlestatusChange}
                 />
-            <Button /*type="submit"*/ variant="contained" color="primary" onClick={() => {handleSubmit(); closeModal();}}>作成</Button>
+            <Button /*type="submit"*/ variant="contained" color="primary" onClick={() => {handleSubmit(); closeModal();}}>OK</Button>
                 </form>
         </div>
         ): (

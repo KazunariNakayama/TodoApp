@@ -22,12 +22,25 @@ export const getTasks = async () => {
 
 //due_date: string, 
 export const getTasksSearch = async (
-  title: string,
-  status: string,
-  due_date: string
+    rawid: string,
+    title: string,
+    status: string,
+    due_date: string
 ) => {
-  const conditions = [];
-  const params = [];
+    const conditions = [];
+    const params = [];
+    const id = rawid ? parseInt(rawid, 10) : undefined;
+
+    if (id) {
+    conditions.push(`id = $${params.length + 1}`);
+    params.push(id);
+  }
+// if (id !== undefined) {
+//   conditions.push(`id = $${params.length + 1}`);
+//   params.push(id);
+// }
+
+
 
   if (title) {
     conditions.push(`(title LIKE $${params.length + 1} OR detail LIKE $${params.length + 1})`);
@@ -134,6 +147,9 @@ export const getIdTasks = async (id: number) => {
 
 export const getIdSubTasks = async (id: number) => {
     const subtasks = await prisma.$queryRaw`SELECT * FROM "Subtask" WHERE "taskId" = ${id}` as any[];
+    if (subtasks.length === 0) {
+        throw new CustomError('SUbTask not found', 404);
+    }
     return subtasks;
 }
 

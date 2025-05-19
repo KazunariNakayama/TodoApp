@@ -40,12 +40,13 @@ tasks.get('/', async (c) => {
 // // タスク一覧をsearchで取得
 tasks.get('/search', async (c) => {
 
+  const id = c.req.query('id') || ''; // 未指定でも安全なように空文字に
   const title = c.req.query('title') || ''; // 未指定でも安全なように空文字に
   const due_date = c.req.query('due_date') || ''; // 未指定でも安全なように空文字に
   const status = c.req.query('status') || ''; // 未指定でも安全なように空文字に
 
 
-  const tasks = await getTasksSearch(title, status, due_date);
+  const tasks = await getTasksSearch(id,title, status, due_date);
 
   //const tasks = await prisma.$queryRaw`SELECT * FROM "Task" WHERE title LIKE ${'%' + title + '%'}`as any[];
 
@@ -60,12 +61,18 @@ tasks.get('/search', async (c) => {
 
 
 
-//指定タスクの取得
+// //指定タスクの取得
+// tasks.get('/:id', async (c) => {
+//   const id = parseInt(c.req.param('id'));
+//   const tasks = await getIdTasks(id);
+//   const subtasks = await getIdSubTasks(id);
+//   return c.json({tasks,subtasks});
+// });
+//指定タスクのサブタスクの取得
 tasks.get('/:id', async (c) => {
   const id = parseInt(c.req.param('id'));
-  const tasks = await getIdTasks(id);
   const subtasks = await getIdSubTasks(id);
-  return c.json({tasks,subtasks});
+  return c.json(subtasks);
 });
 
 
