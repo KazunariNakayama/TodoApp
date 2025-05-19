@@ -243,7 +243,7 @@ const App = () => {
         }
       );
       // うまく行きそうにないなら、reloadで対応予定
-      // window.location.reload();
+       //window.location.reload();
 
       if (!response.ok) throw new Error('Failed to Create Task');
       // const data = await response.json();
@@ -253,7 +253,7 @@ const App = () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/${id}`);
       if (!response.ok) throw new Error('Failed to fetch subtasks');
       const data = await response.json();
-      setTasks(data);
+      setSubTasks(data);
     } catch (err) {
       console.error('Failed to fetch subtasks:', err);
     } finally {
