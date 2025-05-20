@@ -19,6 +19,10 @@ import "react-datepicker/dist/react-datepicker.css"
 //プルダウン直書き
 import Select from 'react-select'
 
+import Modal from '../components/Modal.tsx'
+import { RxCross1 } from "react-icons/rx";
+
+
 
 
 const App = () => {
@@ -190,15 +194,19 @@ const App = () => {
     }
   };
   
+// モーダルの開閉状態を親コンポーネントのstateで管理
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
 
   return (
     <div>
-      <button onClick={ShowModal}>タスク追加ボタン</button>
-      <CreateForm modalbool={showModal} setModalbool={setShowModal} onCreate={handleCreate}/>
+       <button onClick={() => setIsModalOpen(true)}>モーダルを開く</button>
+      <Modal modalbool={isModalOpen} setModalbool={setIsModalOpen} onCreate={handleCreate} />
+      {/* <button onClick={ShowModal}>タスク追加ボタン</button>
+      <CreateForm modalbool={showModal} setModalbool={setShowModal} onCreate={handleCreate}/> */}
       <h2>検索フォーム</h2>
-      <button onClick={ShowModal}>Open Modal</button>
+      {/* <button onClick={ShowModal}>Open Modal</button> */}
       <UserFormProps onSearch={handleSearch} />
       {/* <UserForm onSubmit={handleFormSubmit} /> */}
       {/* <h2>期日検索</h2> */}
@@ -209,6 +217,11 @@ const App = () => {
       {/* <h2>ステータス検索</h2>
       <Select options={options} /> */} 
       <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
+    
+        <div className="App">
+     
+    </div>
+        
     </div>
   );
 };
