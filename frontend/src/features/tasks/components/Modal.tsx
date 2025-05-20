@@ -132,17 +132,6 @@ const CreateForm : React.FC<Props> = ({ modalbool, setModalbool, onCreate }) => 
             </button>
             <Button className="mr-5 bg-black3 w-20 py-1 " variant="contained" color="primary" onClick={() => {handleSubmit(); closeModal();}}>作成</Button>
           </div>
-          {/* <div className="text-right bg-black3 mt-5 w-full rounded-b-2xl py-5">
-            <button
-              className="mr-5 bg-black3 w-32 py-1 text-black2"
-              onClick={closeModal}
-            >
-              キャンセル
-            </button>
-            <button className="bg-blue1 w-40 mr-5 py-1 rounded-xl text-white">
-              作成
-            </button>
-          </div> */}
         </form>
       </div>
     </div>

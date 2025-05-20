@@ -10,9 +10,9 @@ import { Link } from "react-router-dom";
 // }
 
 type MyTableProps = {
-  tasks: Task[];
-  loading: boolean;
-  onDelete: (id: string) => void;
+    tasks: Task[];
+    loading: boolean;
+    onDelete: (id: string) => void;
 };
 
 //interface MyTable  { tasks:TaskListProps, loading:TaskListProps, onDelete:(parame: number) => void; } 
@@ -24,7 +24,7 @@ type MyTableProps = {
 
 
 
-const MyTable = ( {tasks, loading , onDelete }:MyTableProps) => {    
+const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
     // const handleDelete = (id: string) => (event: React.FormEvent) => {
     //     event.preventDefault()
     //     console.log('削除ボタンが押されました:', id);
@@ -36,54 +36,54 @@ const MyTable = ( {tasks, loading , onDelete }:MyTableProps) => {
     // }
 
     const columns = [
-    {
-        name: `タスク名`,
-        selector: (row: Task) => row.title,
-        cell: (row) => (
-      <Link to={`/about/${row.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-        {row.title}
-      </Link>
-    ),
-        sortable: true,
-        filter: true,
-    },
-    {
-        name: `内容`,
-        selector: (row: Task) => row.detail,
-        sortable: true,
-        filter: true,
-    },
-    {
-        name: `期日`,
-        selector: (row: Task) => row.due_date,
-        sortable: true,
-        filter: true,
-    },
-    {
-        name: `ステータス`,
-        selector: (row: Task) => row.status,
-        sortable: true,
-        filter: true,
-    },
-    {
-        name: `削除`,
-        button: true,
-        selector: (row: Task) => row.completed ? '削除' : '',
-        cell: (row: Task) => (
-            <Button
-                variant="contained"
-                color="error"
-                value={row.id}
-                onClick={() => {console.log('削除ボタンon'); onDelete(row.id)}}
-            >
-                削除
-            </Button>
+        {
+            name: `タスク名`,
+            selector: (row: Task) => row.title,
+            cell: (row) => (
+                <Link to={`/about/${row.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                    {row.title}
+                </Link>
+            ),
+            sortable: true,
+            filter: true,
+        },
+        {
+            name: `内容`,
+            selector: (row: Task) => row.detail,
+            sortable: true,
+            filter: true,
+        },
+        {
+            name: `期日`,
+            selector: (row: Task) => row.due_date,
+            sortable: true,
+            filter: true,
+        },
+        {
+            name: `ステータス`,
+            selector: (row: Task) => row.status,
+            sortable: true,
+            filter: true,
+        },
+        {
+            name: `削除`,
+            button: true,
+            selector: (row: Task) => row.completed ? '削除' : '',
+            cell: (row: Task) => (
+                <Button
+                    variant="contained"
+                    color="error"
+                    value={row.id}
+                    onClick={() => { console.log('削除ボタンon'); onDelete(row.id) }}
+                >
+                    削除
+                </Button>
             ),
         },
     ];
     return (
         <DataTable
-            title="タスク一覧"
+            // title="タスク一覧"
             columns={columns}
             data={tasks}
             progressPending={loading}

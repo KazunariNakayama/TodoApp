@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import DatePicker from "react-datepicker";
 import { Button } from '@mui/material';
 import {useForm} from 'react-hook-form';
+import { ja } from 'date-fns/locale';
 
 
 interface UserFomeProps {
@@ -17,7 +18,7 @@ const UserFormProps = ({onSearch}) => {
     const [status, setStatus] = useState('');
 
     const handlekeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!event.target.value) return;
+        //if (!event.target.value) return;
         setKeyword(event.target.value);
     };
     const handledateChange = (due_date: Date| null) => {
@@ -39,8 +40,7 @@ const UserFormProps = ({onSearch}) => {
     const options = [
         { value: 'todo', label: '未完了' },
         { value: 'in_progress', label: '進行中' },
-        { value: 'Done', label: '完了' },
-        { value: '', label:'非選択'}
+        { value: 'Done', label: '完了' }
     ]
 
     const filteredOptions = options.find((opt) => opt.value === status.toLowerCase())
@@ -52,18 +52,35 @@ const UserFormProps = ({onSearch}) => {
 
     return (
         <div >
-            <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <form onSubmit={handleSubmit} className="flex items-center gap-4">
                 <label>
-                        <input type="text" value={keyword} onChange={handlekeyChange} />
+                        <input type="text" value={keyword} onChange={handlekeyChange} 
+                        placeholder="タスク名または内容で検索"
+                        className="p-2 border border-gray-300 rounded-md"/>
                 </label>
             <DatePicker
                 selected={due_date}
-                onChange={handledateChange}
+                    onChange={handledateChange}
+                    locale={ja}
+                    shouldCloseOnSelect={true}
+                    className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                    placeholderText="日付を選択"
+                    dateFormat="yyyy/MM/dd"
+                    // popperClassName="z-100"
+                    calendarClassName="bg-white border border-gray-300 rounded-lg shadow-md"
                 />
             {/* .toLowerCaseは小文字化する処理 */}
             <Select
                 options={options}
                 value={filteredOptions}
+                placeholder="ステータスで絞り込み"
+                styles={{
+                    control: (base) => ({
+                    ...base,
+                    width: 220, // ← pxで明示指定
+                    minWidth: 200,
+                    }),
+                }}
                 onChange={handlestatusChange}
                 />
             <Button type="submit" variant="contained" color="primary" /*onClick={handleSubmit}*/>検索</Button>

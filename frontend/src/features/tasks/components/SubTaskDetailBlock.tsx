@@ -7,30 +7,30 @@ type MyTableProps = {
     loading: boolean;
 };
 
-const MyTableSubtask = ( {subtasks, loading }:MyTableProps) => {    
+const MyTableSubtask = ({ subtasks, loading }: MyTableProps) => {
     const columns = [
-    {
-        name: `タスク名`,
-        selector: (row: SubTask) => row.title,
-        sortable: true,
-        filter: true,
-    },
-    {
-        name: `内容`,
-        selector: (row: SubTask) => row.detail,
-        sortable: true,
-        filter: true,
-    },
-    {
-        name: `ステータス`,
-        selector: (row: SubTask) => row.status,
-        sortable: true,
-        filter: true,
-    },
+        {
+            name: `タスク名`,
+            selector: (row: SubTask) => row.title,
+            sortable: true,
+            filter: true,
+        },
+        {
+            name: `内容`,
+            selector: (row: SubTask) => row.detail,
+            sortable: true,
+            filter: true,
+        },
+        {
+            name: `ステータス`,
+            selector: (row: SubTask) => row.status,
+            sortable: true,
+            filter: true,
+        },
     ];
     return (
         <DataTable
-            title="サブタスク一覧"
+            // title="サブタスク一覧"
             columns={columns}
             data={subtasks}
             progressPending={loading}

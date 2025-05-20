@@ -1,56 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import MyTable from '../components/TaskDetailBlock.tsx'; // 下で定義するテーブル表示コンポーネント
-import MyTableSubtask from '../components/SubTaskDetailBlock.tsx'; // 下で定義するテーブル表示コンポーネント
-import { Task, SubTask } from '../types.ts';
+import React, { useEffect, useState } from "react";
+import MyTable from "../components/TaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
+import MyTableSubtask from "../components/SubTaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
+import { Task, SubTask } from "../types.ts";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 //import UserForm from '../components/Taskquery.tsx';
-import { UserFormInputs, SearchType, } from '../types.ts';
+import { UserFormInputs, SearchType } from "../types.ts";
 //import DateForm from '../components/TaskDue.tsx';
 
-
-import UserFormProps from '../components/Taskquery2.tsx';
-import CreateForm from '../components/TaskCreate.tsx';
+import UserFormProps from "../components/Taskquery2.tsx";
+import UpdateForm from "../components/update_Modal.tsx";
 //import CreateSubTaskForm from '../components/SubTaskCreate.tsx';
 
-
 //カレンダー直書き
-import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 //直書きはしない！
 //import SimpleDatePicker from '../components/TaskDue2.tsx';
 
 //プルダウン直書き
-import Select from 'react-select'
+import Select from "react-select";
 
-
+import CreateSubtaskForm from "../components/create_subtask_Modal.tsx";
 
 const App = () => {
-  const [tasks, setTasks] = useState<Task[]>();
+  const [tasks, setTasks] = useState<Task>();
   const [subtasks, setSubTasks] = useState<SubTask[]>();
-  const [loading, setLoading] = useState(true); 
-  const [loading2, setLoading2] = useState(true); 
+  const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
 
-  
   //検索関連の宣言
-  const [keyword, setKeyword] = useState('');
+  const [keyword, setKeyword] = useState("");
   const initialDate = new Date();
   const [due_date, setDue_date] = useState(initialDate);
-  const [status, setStatus] = useState<'TODO'|'IN_PROGRESS'|'DONE'>('TODO');
+  const [status, setStatus] = useState<"TODO" | "IN_PROGRESS" | "DONE">("TODO");
   const { id } = useParams();
 
-  console.log("取得したID",id);
+  console.log("取得したID", id);
   const navigate = useNavigate();
 
   const handleBack = () => {
     navigate("/");
-  }
+  };
 
-
-//   const handleChange = (date) => {
-//     setDue_date(due_date);
-//   }
+  //   const handleChange = (date) => {
+  //     setDue_date(due_date);
+  //   }
 
   // 例：APIからデータを取得（DBのREST APIなど）
   useEffect(() => {
@@ -61,13 +57,15 @@ const App = () => {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search?id=${id}`);
-      console.log("検索ID",id);
-      if (!response.ok) throw new Error('Failed to fetch tasks');
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/tasks/search?id=${id}`
+      );
+      console.log("検索ID", id);
+      if (!response.ok) throw new Error("Failed to fetch tasks");
       const data = await response.json();
       setTasks(data);
     } catch (err) {
-      console.error('Failed to fetch tasks:', err);
+      console.error("Failed to fetch tasks:", err);
     } finally {
       setLoading(false);
     }
@@ -76,13 +74,15 @@ const App = () => {
   const fetchSubTasks = async () => {
     setLoading2(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/${id}`);
-      console.log("検索ID",id);
-      if (!response.ok) throw new Error('Failed to fetch subtasks');
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/tasks/${id}`
+      );
+      console.log("検索ID", id);
+      if (!response.ok) throw new Error("Failed to fetch subtasks");
       const subtaskdata = await response.json();
       setSubTasks(subtaskdata);
     } catch (err) {
-      console.error('Failed to fetch subtasks:', err);
+      console.error("Failed to fetch subtasks:", err);
     } finally {
       setLoading2(false);
     }
@@ -104,22 +104,24 @@ const App = () => {
     // // ここでAPIなどに送信してもOK
   };
 
-
   // const handleDueSubmit = (data) => {
   //   console.log('期日送信データ:', data);
   //   alert(`送信成功`);
   // }
 
-
   const options = [
-    { value: 'todo', label: '未完了' },
-    { value: 'in_progress', label: '進行中' },
-    { value: 'Done', label: '完了' },
-    { value: '', label:'選択を外す'}
-  ]
+    { value: "todo", label: "未完了" },
+    { value: "in_progress", label: "進行中" },
+    { value: "Done", label: "完了" },
+    { value: "", label: "選択を外す" },
+  ];
 
-  const handleSearch = async (params: { keyword: string; due_date: string; status: string }) => {
-    console.log('検索条件:', params);
+  const handleSearch = async (params: {
+    keyword: string;
+    due_date: string;
+    status: string;
+  }) => {
+    console.log("検索条件:", params);
     setLoading(true);
     try {
       const query = new URLSearchParams({
@@ -132,169 +134,214 @@ const App = () => {
         `${process.env.REACT_APP_API_URL}/api/tasks/search?${query}`
       );
 
-      if (!response.ok) throw new Error('Failed to fetch tasks');
+      if (!response.ok) throw new Error("Failed to fetch tasks");
       const data = await response.json();
       setTasks(data); // ← これが App の状態を更新！
     } catch (err) {
-      console.error('Failed to fetch tasks:', err);
+      console.error("Failed to fetch tasks:", err);
     } finally {
       setLoading(false);
     }
   };
 
+  <UserFormProps onSearch={handleSearch} />;
 
-  <UserFormProps onSearch={handleSearch} />
-  
-
-  const handleDelete = async (params: string ) => {
-    console.log('id:', params);
+  const handleDelete = async (params: string) => {
+    console.log("id:", params);
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/${params}}`,{
-          method:`DELETE`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/${params}}`,
+        {
+          method: `DELETE`,
         }
       );
 
-      if (!response.ok) throw new Error('Failed to Delete Task');
+      if (!response.ok) throw new Error("Failed to Delete Task");
       // const data = await response.json();
       // setTasks(data); // ← これが App の状態を更新！
-      
-      try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
-      if (!response.ok) throw new Error('Failed to fetch tasks');
-      const data = await response.json();
-      setTasks(data);
-    } catch (err) {
-      console.error('Failed to fetch tasks:', err);
-    } finally {
-      setLoading(false);
-    }
 
-      
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/tasks/search`
+        );
+        if (!response.ok) throw new Error("Failed to fetch tasks");
+        const data = await response.json();
+        setTasks(data);
+      } catch (err) {
+        console.error("Failed to fetch tasks:", err);
+      } finally {
+        setLoading(false);
+      }
     } catch (err) {
-      console.error('Failed to fetch tasks:', err);
+      console.error("Failed to fetch tasks:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  <MyTable tasks={tasks ?? []}  loading={loading} onDelete={handleDelete}  />
+  // <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />;
 
-  const [showModal, setShowModal]=useState(false);
+  const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
     setShowModal(true);
-  }
-  const [showSubModal, setShowSubModal]=useState(false);
+  };
+  const [showSubModal, setShowSubModal] = useState(false);
   const ShowSubModal = () => {
     setShowSubModal(true);
-  }
+  };
 
-  const handleUpdate = async (params: { title: string; detail: string; due_date: string; status: string }) => {
-    console.log('params:', params);
+  const handleUpdate = async (params: {
+    title: string;
+    detail: string;
+    due_date: string;
+    status: string;
+  }) => {
+    console.log("params:", params);
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/${id}`,{
-          method:`PUT`,
-          headers:{
-            'Content-Type':'application/json'
+        `${process.env.REACT_APP_API_URL}/api/tasks/${id}`,
+        {
+          method: `PUT`,
+          headers: {
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(params)
-          
+          body: JSON.stringify(params),
         }
       );
 
-      if (!response.ok) throw new Error('Failed to Create Task');
+      if (!response.ok) throw new Error("Failed to Create Task");
       // const data = await response.json();
       // setTasks(data); // ← これが App の状態を更新！
-      
+
       try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search?id=${id}`);
-      if (!response.ok) throw new Error('Failed to fetch tasks');
-      const data = await response.json();
-      setTasks(data);
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/tasks/search?id=${id}`
+        );
+        if (!response.ok) throw new Error("Failed to fetch tasks");
+        const data = await response.json();
+        setTasks(data);
+      } catch (err) {
+        console.error("Failed to fetch tasks:", err);
+      } finally {
+        setLoading(false);
+      }
     } catch (err) {
-      console.error('Failed to fetch tasks:', err);
-    } finally {
-      setLoading(false);
-    }
-    } catch (err) {
-      console.error('Failed to fetch tasks:', err);
+      console.error("Failed to fetch tasks:", err);
     } finally {
       setLoading(false);
     }
   };
 
-
-
-  const handleCreate = async (params: { title: string; detail: string; status: string }) => {
-    console.log('params:', params);
+  const handleCreate = async (params: {
+    title: string;
+    detail: string;
+    status: string;
+  }) => {
+    console.log("params:", params);
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/${id}/subtasks`,{
-          method:`POST`,
-          headers:{
-            'Content-Type':'application/json'
+        `${process.env.REACT_APP_API_URL}/api/tasks/${id}/subtasks`,
+        {
+          method: `POST`,
+          headers: {
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(params)
-          
+          body: JSON.stringify(params),
         }
       );
       // うまく行きそうにないなら、reloadで対応予定
-       //window.location.reload();
+      //window.location.reload();
 
-      if (!response.ok) throw new Error('Failed to Create Task');
+      if (!response.ok) throw new Error("Failed to Create Task");
       // const data = await response.json();
       // setTasks(data); // ← これが App の状態を更新！
-      
+
       try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch subtasks');
-      const data = await response.json();
-      setSubTasks(data);
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/tasks/${id}`
+        );
+        if (!response.ok) throw new Error("Failed to fetch subtasks");
+        const data = await response.json();
+        setSubTasks(data);
+      } catch (err) {
+        console.error("Failed to fetch subtasks:", err);
+      } finally {
+        setLoading(false);
+      }
     } catch (err) {
-      console.error('Failed to fetch subtasks:', err);
-    } finally {
-      setLoading(false);
-    }
-    } catch (err) {
-      console.error('Failed to fetch subtasks:', err);
+      console.error("Failed to fetch subtasks:", err);
     } finally {
       setLoading(false);
     }
   };
-  
-
 
   return (
     <div>
-      <button onClick={handleBack}>タスク一覧に戻る</button>
-      <br/>
-      <br/>
-      <button onClick={ShowModal}>タスク編集ボタン</button>
-      <CreateForm modalbool={showModal} setModalbool={setShowModal} onCreate={handleUpdate}/>
-   
-      {/* <UserFormProps onSearch={handleSearch} /> */}
-      {/* <UserForm onSubmit={handleFormSubmit} /> */}
-      {/* <h2>期日検索</h2> */}
-      {/* <DateForm onSubmit={handleDueSubmit}/> */}
-      {/* <h2>検索フォーム</h2>
+      {tasks && (
+        <div>
+          <button onClick={handleBack}>タスク一覧に戻る</button>
+          <label className='flex flex-row mb-5 mt-5'>
+            <h2 className='text-xl font-semibold text-gray-800 ml-2'>{tasks[0].title}</h2>
+            <button className="ml-auto"
+              onClick={ShowModal}
+            >
+              <span className="text-xl font-bold leading-none mr-5" >＋ タスク編集</span>
+              {tasks && (
+                <UpdateForm
+                  task={tasks ?? []}
+                  modalbool={showModal}
+                  setModalbool={setShowModal}
+                  onCreate={handleUpdate}
+                />
+              )}
+            </button>
+
+          </label>
+
+
+
+
+
+
+          <button onClick={ShowModal}>タスク編集ボタン</button>
+
+
+          {/* <UserFormProps onSearch={handleSearch} /> */}
+          {/* <UserForm onSubmit={handleFormSubmit} /> */}
+          {/* <h2>期日検索</h2> */}
+          {/* <DateForm onSubmit={handleDueSubmit}/> */}
+          {/* <h2>検索フォーム</h2>
       <DatePicker selected={startDate} onChange={handleChange}/>
       {/* <SimpleDatePicker selected={startDate} onChange={handleChange}/>       */}
-      {/* <h2>ステータス検索</h2>
-      <Select options={options} /> */} 
-      <br/>
-      <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
-      <br/>
-      <button onClick={ShowSubModal}>サブタスク追加ボタン</button>
-      {/* <CreateSubTaskForm modalbool={showModal} setModalbool={setShowModal} onCreate={handleUpdate}/> */}
-      <CreateForm modalbool={showSubModal} setModalbool={setShowSubModal} onCreate={handleCreate}/>
-      <MyTableSubtask subtasks={subtasks ?? []} loading={loading2} />
+          {/* <h2>ステータス検索</h2>
+      <Select options={options} /> */}
+          <br />
+          <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
+          <br />
+          <label className='flex flex-row mb-5 mt-5'>
+            <h2 className='text-xl font-semibold text-gray-800 ml-2'>サブタスク</h2>
+            <button className="ml-auto"
+              onClick={ShowSubModal}
+            >
+              <span className="text-xl font-bold leading-none mr-5" >＋ サブタスク追加</span>
+            </button>
+            {tasks && (
+              <CreateSubtaskForm
+                modalbool={showSubModal}
+                setModalbool={setShowSubModal}
+                onCreate={handleCreate}
+              />
+            )}
+          </label>
+
+          <MyTableSubtask subtasks={subtasks ?? []} loading={loading2} />
+        </div>
+      )}
     </div>
   );
 };
 
 export default App;
-
