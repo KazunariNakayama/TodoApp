@@ -21,11 +21,11 @@ const CreateSubtaskForm: React.FC<Props> = ({
     setModalbool,
     onCreate,
 }) => {
-    const [title, setTitle] = useState("");
-    const [detail, setDetail] = useState("");
+    const [title, setTitle] = useState();
+    const [detail, setDetail] = useState();
     const initialDate = new Date();
     const [due_date, setDue_date] = useState(initialDate);
-    const [status, setStatus] = useState("todo");
+    const [status, setStatus] = useState("TODO");
 
     const handletitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         //if (!event.target.value) return;
@@ -63,6 +63,7 @@ const CreateSubtaskForm: React.FC<Props> = ({
 
     const handleSubmit = () => {
         onCreate({ title, detail, due_date, status });
+        //ここにuseStateを使って、入力値を破棄する処理を入れる？
     };
 
     const closeModal = () => {
@@ -78,7 +79,7 @@ const CreateSubtaskForm: React.FC<Props> = ({
             onClick={closeModal}
         >
             <div
-                className="bg-white h-[32rem] w-[35rem] rounded-2xl shadow-2xl"
+                className="bg-white h-[26rem] w-[35rem] rounded-2xl shadow-2xl"
                 //NOTE:コンポーネントの外側をクリックしたときにモーダルを閉じることができるように
                 //NOTE:これは内側をクリックしてもモーダルが閉じないようにするための処理
                 onClick={(e) => e.stopPropagation()}
@@ -88,16 +89,16 @@ const CreateSubtaskForm: React.FC<Props> = ({
                     className="flex flex-col gap-3 p-5" /*style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}*/
                 >
                     <div className="flex flex-row">
-                        <h2 className="text-xl font-semibold text-gray-800">
+                        <h2 className="text-3xl font-semibold text-gray-800">
                             サブタスク作成
                         </h2>
                         <button className="ml-auto" onClick={closeModal}>
-                            <span className="text-xl font-bold leading-none">&times;</span>
+                            <span className="text-3xl font-bold leading-none">&times;</span>
                         </button>
                     </div>
                     <label className="flex flex-col">
                         <span className="mb-1 text-sm font-medium text-gray-700">
-                            タスク名
+                            タスク名(20文字まで)
                         </span>
                         <input
                             type="text"
@@ -107,7 +108,7 @@ const CreateSubtaskForm: React.FC<Props> = ({
                         />
                     </label>
                     <label className="flex flex-col mb-3">
-                        <span className="mb-1 text-sm font-medium text-gray-700">内容</span>
+                        <span className="mb-1 text-sm font-medium text-gray-700">内容(255文字まで)</span>
                         <textarea
                             value={detail}
                             onChange={handledetailChange}

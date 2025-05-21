@@ -3,15 +3,15 @@ import Select from 'react-select'
 import React, { useState } from 'react';
 import DatePicker from "react-datepicker";
 import { Button } from '@mui/material';
-import {useForm} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { ja } from 'date-fns/locale';
 
 
 interface UserFomeProps {
-    onSearch: (parames: {keyword: string, due_date: string , status: string  }) => void;
+    onSearch: (parames: { keyword: string, due_date: string, status: string }) => void;
 }
 
-const UserFormProps = ({onSearch}) => {
+const UserFormProps = ({ onSearch }) => {
     const [keyword, setKeyword] = useState('');
     const initialDate = new Date();
     const [due_date, setDue_date] = useState(initialDate);
@@ -21,7 +21,7 @@ const UserFormProps = ({onSearch}) => {
         //if (!event.target.value) return;
         setKeyword(event.target.value);
     };
-    const handledateChange = (due_date: Date| null) => {
+    const handledateChange = (due_date: Date | null) => {
         if (!due_date) return;
         setDue_date(due_date);
     };
@@ -30,10 +30,10 @@ const UserFormProps = ({onSearch}) => {
     //     setStatus('DONE');
     // };
     const handlestatusChange = (selected: { value: string; label: string } | null) => {
-    if (!selected) {
-        setStatus(''); // 非選択時の挙動（必要に応じて調整）
-        return;
-    }
+        if (!selected) {
+            setStatus(''); // 非選択時の挙動（必要に応じて調整）
+            return;
+        }
         setStatus(selected.value.toUpperCase() as 'TODO' | 'IN_PROGRESS' | 'DONE');
     };
 
@@ -47,19 +47,19 @@ const UserFormProps = ({onSearch}) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        onSearch({keyword, due_date, status});
+        onSearch({ keyword, due_date, status });
     }
 
     return (
         <div >
             <form onSubmit={handleSubmit} className="flex items-center gap-4">
                 <label>
-                        <input type="text" value={keyword} onChange={handlekeyChange} 
+                    <input type="text" value={keyword} onChange={handlekeyChange}
                         placeholder="タスク名または内容で検索"
-                        className="p-2 border border-gray-300 rounded-md"/>
+                        className="p-2 border border-gray-300 rounded-md" />
                 </label>
-            <DatePicker
-                selected={due_date}
+                <DatePicker
+                    selected={due_date}
                     onChange={handledateChange}
                     locale={ja}
                     shouldCloseOnSelect={true}
@@ -69,25 +69,38 @@ const UserFormProps = ({onSearch}) => {
                     // popperClassName="z-100"
                     calendarClassName="bg-white border border-gray-300 rounded-lg shadow-md"
                 />
-            {/* .toLowerCaseは小文字化する処理 */}
-            <Select
-                options={options}
-                value={filteredOptions}
-                placeholder="ステータスで絞り込み"
-                styles={{
-                    control: (base) => ({
-                    ...base,
-                    width: 220, // ← pxで明示指定
-                    minWidth: 200,
-                    }),
-                }}
-                onChange={handlestatusChange}
+                {/* .toLowerCaseは小文字化する処理 */}
+                <Select
+                    options={options}
+                    value={filteredOptions}
+                    placeholder="ステータスで絞り込み"
+                    styles={{
+                        control: (base) => ({
+                            ...base,
+                            width: 220, // ← pxで明示指定
+                            minWidth: 200,
+                        }),
+                    }}
+                    onChange={handlestatusChange}
                 />
-            <Button type="submit" variant="contained" color="primary" /*onClick={handleSubmit}*/>検索</Button>
-                </form>
+                <Button
+                    type="submit"
+                    variant="outlined"
+                    sx={{
+                        borderColor: '#000',        // 黒枠
+                        color: '#000',              // 通常時：黒文字
+                        backgroundColor: '#fff',    // 通常時：白背景
+                        '&:hover': {
+                            backgroundColor: '#000',  // ホバー時：黒背景
+                            color: '#fff',            // ホバー時：白文字
+                            borderColor: '#000',      // 枠線はそのまま黒
+                        },
+                    }}
+                >検索</Button>
+            </form>
         </div>
-        
-        ); 
+
+    );
 }
 
 export default UserFormProps;

@@ -56,7 +56,7 @@ const CreateForm: React.FC<Props> = ({ modalbool, setModalbool, onCreate }) => {
   const filteredOptions = options.find((opt) => opt.value === status.toLowerCase())
 
   const handleSubmit = () => {
-    onCreate({ title, detail, due_date, status });
+    onCreate({ title, detail, due_date, status: status.toUpperCase() as 'TODO' | 'IN_PROGRESS' | 'DONE', });
   }
 
   const closeModal = () => {
@@ -79,19 +79,19 @@ const CreateForm: React.FC<Props> = ({ modalbool, setModalbool, onCreate }) => {
       >
         <form onSubmit={handleSubmit} className='flex flex-col gap-3 p-5' /*style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}*/>
           <div className='flex flex-row'>
-            <h2 className='text-xl font-semibold text-gray-800'>新規タスク作成</h2>
+            <h2 className='text-3xl font-semibold text-gray-800'>新規タスク作成</h2>
             <button className="ml-auto"
               onClick={closeModal}
             >
-              <span className="text-xl font-bold leading-none">&times;</span>
+              <span className="text-3xl font-bold leading-none">&times;</span>
             </button>
           </div>
           <label className="flex flex-col">
-            <span className="mb-1 text-sm font-medium text-gray-700">タスク名</span>
+            <span className="mb-1 text-sm font-medium text-gray-700">タスク名(20文字まで)</span>
             <input type="text" value={title} onChange={handletitleChange} className="p-2 border border-gray-300 rounded-md" />
           </label>
           <label className='flex flex-col mb-3'>
-            <span className="mb-1 text-sm font-medium text-gray-700">内容</span>
+            <span className="mb-1 text-sm font-medium text-gray-700">内容(255文字まで)</span>
             <textarea value={detail}
               onChange={handledetailChange}
               className="p-2 border border-gray-300 rounded-md resize-none overflow-y-auto"

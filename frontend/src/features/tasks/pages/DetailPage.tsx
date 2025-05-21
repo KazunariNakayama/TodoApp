@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MyTable from "../components/TaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
+import DetailBlock from "../components/TaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
 import MyTableSubtask from "../components/SubTaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
 import { Task, SubTask } from "../types.ts";
 import { useParams } from "react-router-dom";
@@ -282,14 +282,20 @@ const App = () => {
     <div>
       {tasks && (
         <div>
-          <button onClick={handleBack}>タスク一覧に戻る</button>
-          <div className='flex flex-row mb-5 mt-5'>
-            <h2 className='text-xl font-semibold text-gray-800 ml-2'>{tasks[0].title}</h2>
-            <button className="ml-auto"
-              onClick={ShowModal}
-            >
-              <span className="text-xl font-bold leading-none mr-5" >＋ タスク編集</span>
+          <button
+            onClick={handleBack}
+            className="ml-auto mt-3 mb-3 mr-2 font-bold text-black bg-white border border-black px-4 py-1 rounded hover:bg-black hover:text-white transition"
+          >
+            ← タスク一覧に戻る
+          </button>
 
+          <div className='flex flex-row mb-5 mt-5'>
+            <h2 className='text-3xl font-semibold text-gray-800 ml-2'>{tasks[0].title}</h2>
+            <button
+              onClick={ShowModal}
+              className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"
+            >
+              ＋ タスク編集
             </button>
           </div>
           {tasks && (
@@ -300,14 +306,15 @@ const App = () => {
               onCreate={handleUpdate}
             />
           )}
-          <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
+          <DetailBlock tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
           <br />
           <div className='flex flex-row mb-5 mt-5'>
-            <h2 className='text-xl font-semibold text-gray-800 ml-2'>サブタスク</h2>
-            <button className="ml-auto"
+            <h2 className='text-3xl font-semibold text-gray-800 ml-2'>サブタスク</h2>
+            <button
               onClick={ShowSubModal}
+              className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"
             >
-              <span className="text-xl font-bold leading-none mr-5" >＋ サブタスク追加</span>
+              ＋ サブタスク追加
             </button>
 
           </div>

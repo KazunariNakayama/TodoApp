@@ -36,6 +36,8 @@ const App = () => {
   const [status, setStatus] = useState<'TODO' | 'IN_PROGRESS' | 'DONE'>('TODO');
 
 
+
+
   //   const handleChange = (date) => {
   //     setDue_date(due_date);
   //   }
@@ -198,17 +200,17 @@ const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
-
   return (
     <div>
       <div className='flex flex-row mb-5 mt-5'>
-        <h2 className='text-xl font-semibold text-gray-800 ml-2'>タスク管理</h2>
-        <button className="ml-auto"
-          variant="contained" color="primary"
+        <h2 className='text-3xl font-semibold text-gray-800 ml-2'>タスク管理</h2>
+        <button
           onClick={() => setIsModalOpen(true)}
+          className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"
         >
-          <span className="text-xl font-bold leading-none mr-5" >＋ 新規タスク</span>
+          ＋ 新規タスク
         </button>
+
         <Modal modalbool={isModalOpen} setModalbool={setIsModalOpen} onCreate={handleCreate} />
       </div>
 

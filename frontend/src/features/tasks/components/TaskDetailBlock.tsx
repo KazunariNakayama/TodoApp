@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import DataTable from "react-data-table-component";
 import { Task } from "../types";
+import { format } from 'date-fns';
+import { ja } from 'date-fns/locale';
 
 type MyTableProps = {
     tasks: Task[];
@@ -9,8 +11,18 @@ type MyTableProps = {
     onDelete: (id: string) => void;
 };
 
-const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
+const DetailBlock = ({ tasks, loading, onDelete }: MyTableProps) => {
     console.log("UpdateForm task: ", tasks);
+    const options = [
+        { value: 'todo', label: '未完了' },
+        { value: 'in_progress', label: '進行中' },
+        { value: 'done', label: '完了' },
+    ];
+    const statusLabelMap = {
+        TODO: '未着手',
+        IN_PROGRESS: '進行中',
+        DONE: '完了',
+    };
     const columns = [
         {
             name: `タスク名`,
@@ -27,6 +39,7 @@ const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
         {
             name: `期日`,
             selector: (row: Task) => row.due_date,
+            //cell: (row: Task) => format(new Date(row.due_date), 'yyyy年MM月dd日', { locale: ja }),
             sortable: true,
             filter: true,
         },
@@ -56,9 +69,9 @@ const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
         },
     ];
     return (
-        <div className="bg-white border border-l-gray-950 h-[20rem] rounded-2xl shadow-2xl  mt-9">
+        <div className="bg-white border-4 border-l-gray-300 h-[23.5rem] rounded-2xl shadow-xl  mt-9">
             <div className="m-5">
-                <h2 className='text-xl font-semibold text-gray-950'>タスク詳細</h2>
+                <h2 className='text-2xl font-semibold text-gray-950'>タスク詳細</h2>
                 <h3 className='text-sm font-semibold text-gray-500 mb-5'>タスクの詳細情報</h3>
                 <div className="flex flax-row">
                     <label className='flex flex-col w-1/2'>
@@ -67,16 +80,20 @@ const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
                     </label>
                     <label className='flex flex-col w-1/2'>
                         <span className="mb-1 text-sm font-medium text-gray-500">ステータス</span>
-                        <span className="mb-1 text-xl font-medium text-gray-950">{tasks[0].status}</span>
+                        <span className="mb-1 text-xl font-medium text-gray-950">{statusLabelMap[tasks[0].status]}</span>
                     </label>
                 </div>
                 <label className='flex flex-col mt-5'>
                     <span className="mb-1 text-sm font-medium text-gray-500">期限</span>
-                    <span className="mb-1 text-xl font-medium text-gray-950">{tasks[0].due_date}</span>
+                    <span className="mb-1 text-xl font-medium text-gray-950">{format(new Date(tasks[0].due_date), 'yyyy/MM/dd', { locale: ja })}</span>
                 </label>
                 <label className='flex flex-col mt-5'>
                     <span className="mb-1 text-sm font-medium text-gray-500">内容</span>
-                    <span className="mb-1 text-xl font-medium text-gray-950">{tasks[0].detail}</span>
+                    <span
+                        className="mb-1 text-xl font-medium text-gray-950 max-h-[5.5rem] overflow-y-auto block"
+                    >
+                        {tasks[0].detail}
+                    </span>
                 </label>
             </div>
 
@@ -96,4 +113,4 @@ const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
     );
 };
 
-export default MyTable;
+export default DetailBlock;
