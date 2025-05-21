@@ -10,6 +10,7 @@ type MyTableProps = {
 };
 
 const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
+    console.log("UpdateForm task: ", tasks);
     const columns = [
         {
             name: `タスク名`,
@@ -55,7 +56,7 @@ const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
         },
     ];
     return (
-        <div className="bg-white border border-l-gray-950 h-[20rem] rounded-2xl shadow-2xl mr-1 ml-1 mt-4">
+        <div className="bg-white border border-l-gray-950 h-[20rem] rounded-2xl shadow-2xl  mt-9">
             <div className="m-5">
                 <h2 className='text-xl font-semibold text-gray-950'>タスク詳細</h2>
                 <h3 className='text-sm font-semibold text-gray-500 mb-5'>タスクの詳細情報</h3>

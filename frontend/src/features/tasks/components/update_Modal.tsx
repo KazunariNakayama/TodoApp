@@ -6,12 +6,8 @@ import { useForm } from 'react-hook-form';
 import { ja } from 'date-fns/locale';
 import { Task } from '../types';
 
-
-
-
-
 interface Props {
-  task: Task;
+  task: Task[];
   modalbool: boolean;
   setModalbool: React.Dispatch<React.SetStateAction<boolean>>;
   onCreate: (params: {
@@ -24,20 +20,25 @@ interface Props {
 
 
 const UpdateForm = ({ task, modalbool, setModalbool, onCreate }: Props) => {
-  const [title, setTitle] = useState(task.title);
-  const [detail, setDetail] = useState(task.detail);
-  //const initialDate = new Date(task.due_date);
-  const [due_date, setDue_date] = useState(task.due_date);
-  const [status, setStatus] = useState(task.status);
+  const [title, setTitle] = useState('');
+  const [detail, setDetail] = useState('');
+  const initialDate = new Date();
+  const [due_date, setDue_date] = useState(initialDate);
+  const [status, setStatus] = useState('TODO');
 
   useEffect(() => {
-    if (task) {
-      setTitle(task.title)
-      setDetail(task.detail)
-      setDue_date(task.due_date);
-      setStatus(task.status)
+    console.log("UpdateForm task: ", task[0]);
+    if (task[0]) {
+      setTitle(task[0].title ?? '');
+      setDetail(task[0].detail ?? '');
+      setDue_date(task[0].due_date && !isNaN(Date.parse(task[0].due_date))
+        ? new Date(task[0].due_date)
+        : new Date());
+      setStatus(task[0].status?.toLowerCase() ?? 'todo');
     }
-  })
+  }, []);
+
+
 
   const handletitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //if (!event.target.value) return;
@@ -52,10 +53,10 @@ const UpdateForm = ({ task, modalbool, setModalbool, onCreate }: Props) => {
     setDue_date(due_date);
   };
   const handlestatusChange = (selected: { value: string; label: string } | null) => {
-    // if (!selected) {
-    //     setStatus(''); // 非選択時の挙動（必要に応じて調整）
-    //     return;
-    // }
+    if (!selected) {
+      setStatus(''); // 非選択時の挙動（必要に応じて調整）
+      return;
+    }
     setStatus(selected.value.toUpperCase() as 'TODO' | 'IN_PROGRESS' | 'DONE');
   };
 
@@ -65,39 +66,38 @@ const UpdateForm = ({ task, modalbool, setModalbool, onCreate }: Props) => {
     { value: 'Done', label: '完了' },
   ]
 
-  const filteredOptions = options.find((opt) => opt.value)
+  const filteredOptions = options.find((opt) => opt.value === status.toLowerCase())
 
   const handleSubmit = () => {
-    onCreate({ title, detail, due_date, status });
+    onCreate({ title, detail, due_date, status: status.toUpperCase() as 'TODO' | 'IN_PROGRESS' | 'DONE', });
   }
 
   const closeModal = () => {
     setModalbool(false);
     console.log(modalbool);
   };
+
   if (!modalbool) {
     return null;
   }
   return (
     <div
-      className="flex justify-center items-center overflow-auto fixed inset-0 m-auto bg-black1 bg-opacity-20 backdrop-blur-md z-20"
+      className="fixed inset-0 bg-black1 bg-opacity-20 backdrop-blur-md z-20 flex justify-center items-center"
       onClick={closeModal}
     >
       <div
         className="bg-white h-[32rem] w-[35rem] rounded-2xl shadow-2xl"
-        //NOTE:コンポーネントの外側をクリックしたときにモーダルを閉じることができるように
-        //NOTE:これは内側をクリックしてもモーダルが閉じないようにするための処理
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit} className='flex flex-col gap-3 p-5' /*style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}*/>
-          <label className='flex flex-row'>
+          <div className='flex flex-row'>
             <h2 className='text-xl font-semibold text-gray-800'>タスク編集</h2>
             <button className="ml-auto"
               onClick={closeModal}
             >
               <span className="text-xl font-bold leading-none">&times;</span>
             </button>
-          </label>
+          </div>
           <label className="flex flex-col">
             <span className="mb-1 text-sm font-medium text-gray-700">タスク名</span>
             <input type="text" value={title} onChange={handletitleChange} className="p-2 border border-gray-300 rounded-md" />
@@ -120,7 +120,6 @@ const UpdateForm = ({ task, modalbool, setModalbool, onCreate }: Props) => {
               className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
               placeholderText="日付を選択"
               dateFormat="yyyy/MM/dd"
-              // popperClassName="z-100"
               calendarClassName="bg-white border border-gray-300 rounded-lg shadow-md"
             />
             {/* .toLowerCaseは小文字化する処理 */}
@@ -142,7 +141,7 @@ const UpdateForm = ({ task, modalbool, setModalbool, onCreate }: Props) => {
             >
               <span className="mb-1 text-sm font-medium text-gray-700">キャンセル</span>
             </button>
-            <Button className="mr-5 bg-black3 w-20 py-1 " variant="contained" color="primary" onClick={() => { handleSubmit(); closeModal(); }}>作成</Button>
+            <Button className="mr-5 bg-black3 w-20 py-1 " variant="contained" color="primary" onClick={() => { handleSubmit(); closeModal(); }}>更新</Button>
           </div>
         </form>
       </div>

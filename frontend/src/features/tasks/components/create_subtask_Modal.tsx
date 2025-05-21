@@ -87,14 +87,14 @@ const CreateSubtaskForm: React.FC<Props> = ({
                     onSubmit={handleSubmit}
                     className="flex flex-col gap-3 p-5" /*style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}*/
                 >
-                    <label className="flex flex-row">
+                    <div className="flex flex-row">
                         <h2 className="text-xl font-semibold text-gray-800">
                             サブタスク作成
                         </h2>
                         <button className="ml-auto" onClick={closeModal}>
                             <span className="text-xl font-bold leading-none">&times;</span>
                         </button>
-                    </label>
+                    </div>
                     <label className="flex flex-col">
                         <span className="mb-1 text-sm font-medium text-gray-700">
                             タスク名

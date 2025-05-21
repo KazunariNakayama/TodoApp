@@ -201,7 +201,7 @@ const App = () => {
 
   return (
     <div>
-      <label className='flex flex-row mb-5 mt-5'>
+      <div className='flex flex-row mb-5 mt-5'>
         <h2 className='text-xl font-semibold text-gray-800 ml-2'>タスク管理</h2>
         <button className="ml-auto"
           variant="contained" color="primary"
@@ -210,7 +210,7 @@ const App = () => {
           <span className="text-xl font-bold leading-none mr-5" >＋ 新規タスク</span>
         </button>
         <Modal modalbool={isModalOpen} setModalbool={setIsModalOpen} onCreate={handleCreate} />
-      </label>
+      </div>
 
 
       {/* <button onClick={ShowModal}>タスク追加ボタン</button>
@@ -234,7 +234,7 @@ const App = () => {
 
       </div>
 
-    </div>
+    </div >
   );
 };
 

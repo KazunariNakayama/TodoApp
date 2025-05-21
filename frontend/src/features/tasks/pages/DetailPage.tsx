@@ -283,60 +283,41 @@ const App = () => {
       {tasks && (
         <div>
           <button onClick={handleBack}>タスク一覧に戻る</button>
-          <label className='flex flex-row mb-5 mt-5'>
+          <div className='flex flex-row mb-5 mt-5'>
             <h2 className='text-xl font-semibold text-gray-800 ml-2'>{tasks[0].title}</h2>
             <button className="ml-auto"
               onClick={ShowModal}
             >
               <span className="text-xl font-bold leading-none mr-5" >＋ タスク編集</span>
-              {tasks && (
-                <UpdateForm
-                  task={tasks ?? []}
-                  modalbool={showModal}
-                  setModalbool={setShowModal}
-                  onCreate={handleUpdate}
-                />
-              )}
+
             </button>
-
-          </label>
-
-
-
-
-
-
-          <button onClick={ShowModal}>タスク編集ボタン</button>
-
-
-          {/* <UserFormProps onSearch={handleSearch} /> */}
-          {/* <UserForm onSubmit={handleFormSubmit} /> */}
-          {/* <h2>期日検索</h2> */}
-          {/* <DateForm onSubmit={handleDueSubmit}/> */}
-          {/* <h2>検索フォーム</h2>
-      <DatePicker selected={startDate} onChange={handleChange}/>
-      {/* <SimpleDatePicker selected={startDate} onChange={handleChange}/>       */}
-          {/* <h2>ステータス検索</h2>
-      <Select options={options} /> */}
-          <br />
+          </div>
+          {tasks && (
+            <UpdateForm
+              task={tasks ?? []}
+              modalbool={showModal}
+              setModalbool={setShowModal}
+              onCreate={handleUpdate}
+            />
+          )}
           <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
           <br />
-          <label className='flex flex-row mb-5 mt-5'>
+          <div className='flex flex-row mb-5 mt-5'>
             <h2 className='text-xl font-semibold text-gray-800 ml-2'>サブタスク</h2>
             <button className="ml-auto"
               onClick={ShowSubModal}
             >
               <span className="text-xl font-bold leading-none mr-5" >＋ サブタスク追加</span>
             </button>
-            {tasks && (
-              <CreateSubtaskForm
-                modalbool={showSubModal}
-                setModalbool={setShowSubModal}
-                onCreate={handleCreate}
-              />
-            )}
-          </label>
 
+          </div>
+          {tasks && (
+            <CreateSubtaskForm
+              modalbool={showSubModal}
+              setModalbool={setShowSubModal}
+              onCreate={handleCreate}
+            />
+          )}
           <MyTableSubtask subtasks={subtasks ?? []} loading={loading2} />
         </div>
       )}
