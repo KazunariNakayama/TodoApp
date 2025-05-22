@@ -17,7 +17,7 @@ const MyTableSubtask = ({ subtasks, loading }: MyTableProps) => {
     };
     const columns = [
         {
-            name: `タスク名`,
+            name: `サブタスク名`,
             selector: (row: SubTask) => row.title,
             sortable: true,
             filter: true,
@@ -50,6 +50,7 @@ const MyTableSubtask = ({ subtasks, loading }: MyTableProps) => {
                 pagination
                 highlightOnHover
                 striped
+                noDataComponent={<p>該当するデータがありません</p>}
             />
         </div>
     );

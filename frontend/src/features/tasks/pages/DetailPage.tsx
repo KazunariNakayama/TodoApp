@@ -61,11 +61,19 @@ const App = () => {
         `${process.env.REACT_APP_API_URL}/api/tasks/search?id=${id}`
       );
       console.log("検索ID", id);
-      if (!response.ok) throw new Error("Failed to fetch tasks");
       const data = await response.json();
+
+      if (!response.ok || data.length === 0) {
+        navigate("/404", { replace: true });
+        console.log(response);
+        throw new Error("Failed to fetch tasks");
+      }
       setTasks(data);
+
     } catch (err) {
       console.error("Failed to fetch tasks:", err);
+      // window.alert("タスクの詳細を表示できませんでした");
+      // handleBack();
     } finally {
       setLoading(false);
     }
@@ -211,7 +219,11 @@ const App = () => {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to Create Task");
+      if (!response.ok) {
+        window.alert("タスクの変更に失敗しました")
+        throw new Error("Failed to Update Task");
+      }
+
       // const data = await response.json();
       // setTasks(data); // ← これが App の状態を更新！
 
@@ -255,7 +267,11 @@ const App = () => {
       // うまく行きそうにないなら、reloadで対応予定
       //window.location.reload();
 
-      if (!response.ok) throw new Error("Failed to Create Task");
+      if (!response.ok) {
+        window.alert("サブタスクの作成に失敗しました")
+        window.location.reload();
+        throw new Error("Failed to Create SubTask");
+      }
       // const data = await response.json();
       // setTasks(data); // ← これが App の状態を更新！
 
@@ -278,6 +294,7 @@ const App = () => {
     }
   };
 
+
   return (
     <div>
       {tasks && (
@@ -290,7 +307,7 @@ const App = () => {
           </button>
 
           <div className='flex flex-row mb-5 mt-5'>
-            <h2 className='text-3xl font-semibold text-gray-800 ml-2'>{tasks[0].title}</h2>
+            <h2 className='text-3xl font-semibold text-gray-800 ml-2'>{tasks[0]?.title || "error"}</h2>
             <button
               onClick={ShowModal}
               className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"

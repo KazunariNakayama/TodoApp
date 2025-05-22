@@ -127,6 +127,7 @@ const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
                 pagination
                 highlightOnHover
                 striped
+                noDataComponent={<p>該当するデータがありません</p>}
             />
         </div>
     );

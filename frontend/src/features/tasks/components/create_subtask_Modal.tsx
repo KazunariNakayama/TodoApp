@@ -73,7 +73,7 @@ const CreateSubtaskForm: React.FC<Props> = ({
 
 
     const handleSubmit = (e: React.FormEvent) => {
-        //e.preventDefault();
+        e.preventDefault();
         if (isValid) {
             onCreate({ title, detail, due_date, status });
         } //else {
@@ -158,7 +158,7 @@ const CreateSubtaskForm: React.FC<Props> = ({
                         </button>
                     </div>
                     <label className="flex flex-col">
-                        <span className="mb-1 text-sm font-medium text-gray-700">タスク名(20文字まで)</span>
+                        <span className="mb-1 text-sm font-medium text-gray-700">サブタスク名(20文字まで)</span>
                         <input type="text" value={title} onChange={handletitleChange}
                             className={`p-2 border border-gray-300 rounded-md ${errors.title ? "border-red-500" : "border-gray-300"}`} />
                         <FieldError message={errors.title} />

@@ -56,7 +56,8 @@ export const getTasksSearch = async (
     const parsed = new Date(due_date);
     if (!isNaN(parsed.getTime())) {
         const endDate = new Date(parsed);
-        endDate.setDate(endDate.getDate() + 1);
+        endDate.setDate(endDate.getDate() +1);
+        endDate.setHours(0, 0, 0, 0)
 
         conditions.push(`due_date < $${params.length + 1}::timestamp`);
         params.push(endDate.toISOString());

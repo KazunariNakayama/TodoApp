@@ -131,7 +131,10 @@ const App = () => {
       }
       );
 
-      if (!response.ok) throw new Error('Failed to Delete Task');
+      if (!response.ok) {
+        window.alert('タスクの削除に失敗しました');
+        throw new Error('Failed to Delete Task');
+      }
       // const data = await response.json();
       // setTasks(data); // ← これが App の状態を更新！
 
@@ -175,7 +178,10 @@ const App = () => {
       }
       );
 
-      if (!response.ok) throw new Error('Failed to Create Task');
+      if (!response.ok) {
+        window.alert("タスクの作成に失敗しました")
+        throw new Error('Failed to Create Task');
+      }
       // const data = await response.json();
       // setTasks(data); // ← これが App の状態を更新！
 

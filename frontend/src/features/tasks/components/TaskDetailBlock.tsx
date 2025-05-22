@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import DataTable from "react-data-table-component";
 import { Task } from "../types";
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { ja } from 'date-fns/locale';
+
 
 type MyTableProps = {
     tasks: Task[];
@@ -76,23 +77,23 @@ const DetailBlock = ({ tasks, loading, onDelete }: MyTableProps) => {
                 <div className="flex flax-row">
                     <label className='flex flex-col w-1/2'>
                         <span className="mb-1 text-sm font-medium text-gray-500">タスク名</span>
-                        <span className="mb-1 text-xl font-medium text-gray-950">{tasks[0].title}</span>
+                        <span className="mb-1 text-xl font-medium text-gray-950">{tasks[0]?.title || "error"}</span>
                     </label>
                     <label className='flex flex-col w-1/2'>
                         <span className="mb-1 text-sm font-medium text-gray-500">ステータス</span>
-                        <span className="mb-1 text-xl font-medium text-gray-950">{statusLabelMap[tasks[0].status]}</span>
+                        <span className="mb-1 text-xl font-medium text-gray-950">{statusLabelMap[tasks[0]?.status] || "error"}</span>
                     </label>
                 </div>
                 <label className='flex flex-col mt-5'>
                     <span className="mb-1 text-sm font-medium text-gray-500">期限</span>
-                    <span className="mb-1 text-xl font-medium text-gray-950">{format(new Date(tasks[0].due_date), 'yyyy/MM/dd', { locale: ja })}</span>
+                    {<span className="mb-1 text-xl font-medium text-gray-950">{isValid(new Date(tasks[0]?.due_date ?? "")) ? format(new Date(tasks[0]?.due_date), 'yyyy/MM/dd', { locale: ja }) : "error"}</span>}
                 </label>
                 <label className='flex flex-col mt-5'>
                     <span className="mb-1 text-sm font-medium text-gray-500">内容</span>
                     <span
                         className="mb-1 text-xl font-medium text-gray-950 max-h-[5.5rem] overflow-y-auto block"
                     >
-                        {tasks[0].detail}
+                        {tasks[0]?.detail || "error"}
                     </span>
                 </label>
             </div>

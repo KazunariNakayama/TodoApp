@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //import NotFound from './pages/NotFound';
 import TaskListPage from './features/tasks/pages/TaskListPage.tsx';
 import DetailePage from './features/tasks/pages/DetailPage.tsx';
+import NotFound from './features/tasks/pages/NotFound.tsx';
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<TaskListPage />} />
         <Route path="/about/:id" element={<DetailePage />} />
         {/* <Route path="*" element={<NotFound />} />  */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

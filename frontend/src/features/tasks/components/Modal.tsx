@@ -68,7 +68,7 @@ const CreateForm: React.FC<Props> = ({ modalbool, setModalbool, onCreate }) => {
       newErrors.detail = `タスク名は${MAX_DETAIL}文字以内で入力してください`;
     }
     if (!due_date || isNaN(new Date(due_date).getTime()) || due_date < today) {
-      newErrors.due_date = "有効な期限を選択してください";
+      newErrors.due_date = "本日以降の有効な期限を選択してください";
     }
     if (!STATUS_OPTIONS.includes(status)) {
       newErrors.status = "有効なステータスを選択してください";
@@ -102,6 +102,7 @@ const CreateForm: React.FC<Props> = ({ modalbool, setModalbool, onCreate }) => {
   const handletitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //if (!event.target.value) return;
     setTitle(event.target.value);
+    // validate();
   };
   const handledetailChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     //if (!event.target.value) return;
