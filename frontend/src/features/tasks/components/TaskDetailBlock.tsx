@@ -19,7 +19,7 @@ const DetailBlock = ({ tasks, loading, onDelete }: MyTableProps) => {
         { value: 'done', label: '完了' },
     ];
     const statusLabelMap = {
-        TODO: '未着手',
+        TODO: '未完了',
         IN_PROGRESS: '進行中',
         DONE: '完了',
     };

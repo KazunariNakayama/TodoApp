@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 import DataTable from 'react-data-table-component';
-import { Task } from '../types';
+import { Task, TaskStatus } from '../types';
 import { Link } from "react-router-dom";
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
+
+import dayjs from 'dayjs';
+import { useForm } from 'react-hook-form';
+
 
 // interface TaskListProps {
 //     tasks: Task[];
@@ -26,6 +30,7 @@ type MyTableProps = {
 
 
 
+
 const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
     // const handleDelete = (id: string) => (event: React.FormEvent) => {
     //     event.preventDefault()
@@ -36,6 +41,8 @@ const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
     // console.log('削除ボタンが押されました:', id);
     // onDelete(id);
     // }
+
+
     console.log("UpdateForm task: ", tasks);
     const statusLabelMap: Record<string, string> = {
         TODO: '未完了',
