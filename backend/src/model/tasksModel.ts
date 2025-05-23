@@ -1,9 +1,10 @@
 import { PrismaClient, TaskStatus, } from '@prisma/client';
 import { CustomError } from '../utils/customError';
 import { string } from 'zod';
+import { prisma } from '../lib/prisma'
 
 
-const prisma = new PrismaClient();
+
 
 export const getTasks = async () => {
     const tasks = await prisma.$queryRaw`SELECT * FROM "Task"` as any[];

@@ -1,12 +1,10 @@
 import { Hono } from 'hono'
 
-
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 async function main() {
-  // ... you will write your Prisma Client queries here
 }
 
 main()
@@ -21,6 +19,5 @@ main()
 
 const app = new Hono()
 console.log('Hello World')
-//...
 
 export default app // for Cloudflare Workers or Bun

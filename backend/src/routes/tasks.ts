@@ -2,8 +2,8 @@
 import { Hono } from 'hono';
 import { PrismaClient, TaskStatus, } from '@prisma/client';
 import { CustomError } from '../utils/customError';
-const prisma = new PrismaClient(); 
-  
+import { prisma } from '../lib/prisma'
+
 //import { PrismaClient /*, TaskStatus */ } from '@prisma/client';
 import {getTasks, createTask, updateTask, deleteTask, getSubtasks, createSubtask, getIdTasks, getIdSubTasks, getTasksSearch} from '../model/tasksModel'; 
 import { stat } from 'fs';

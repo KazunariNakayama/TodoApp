@@ -25,17 +25,17 @@ import Select from 'react-select'
 const App = () => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   //検索関連の宣言
   const [keyword, setKeyword] = useState('');
   const initialDate = new Date();
   const [due_date, setDue_date] = useState(initialDate);
-  const [status, setStatus] = useState<'TODO'|'IN_PROGRESS'|'DONE'>('TODO');
+  const [status, setStatus] = useState<'TODO' | 'IN_PROGRESS' | 'DONE'>('TODO');
 
 
-//   const handleChange = (date) => {
-//     setDue_date(due_date);
-//   }
+  //   const handleChange = (date) => {
+  //     setDue_date(due_date);
+  //   }
 
   // 例：APIからデータを取得（DBのREST APIなど）
   useEffect(() => {
@@ -79,12 +79,12 @@ const App = () => {
   // }
 
 
-const options = [
-  { value: 'todo', label: '未完了' },
-  { value: 'in_progress', label: '進行中' },
-  { value: 'Done', label: '完了' },
-  { value: '', label:'選択を外す'}
-]
+  const options = [
+    { value: 'todo', label: '未完了' },
+    { value: 'in_progress', label: '進行中' },
+    { value: 'Done', label: '完了' },
+    { value: '', label: '選択を外す' }
+  ]
 
   return (
     <div>
@@ -97,7 +97,7 @@ const options = [
       <DatePicker selected={startDate} onChange={handleChange}/>
       {/* <SimpleDatePicker selected={startDate} onChange={handleChange}/>       */}
       {/* <h2>ステータス検索</h2>
-      <Select options={options} /> */} 
+      <Select options={options} /> */}
       <h2>ユーザー一覧</h2>
       <MyTable tasks={tasks} loading={loading} />
     </div>
