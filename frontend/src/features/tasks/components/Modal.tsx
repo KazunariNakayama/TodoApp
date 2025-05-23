@@ -47,35 +47,35 @@ const CreateForm: React.FC<Props> = ({ modalbool, setModalbool, onCreate }) => {
     status?: string;
   }>({});
 
-  useEffect(() => {
-    validate();
-  }, [title, detail, due_date, status]);
+  // useEffect(() => {
+  //   validate();
+  // }, [title, detail, due_date, status]);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const validate = () => {
-    const newErrors: typeof errors = {};
+  // const validate = () => {
+  //   const newErrors: typeof errors = {};
 
-    if (!title.trim()) {
-      newErrors.title = "タスク名を入力してください";
-    } else if (title.length > MAX_TITLE) {
-      newErrors.title = `タスク名は${MAX_TITLE}文字以内で入力してください`;
-    }
-    if (!detail.trim()) {
-      newErrors.detail = "タスク名を入力してください";
-    } else if (detail.length > MAX_DETAIL) {
-      newErrors.detail = `タスク名は${MAX_DETAIL}文字以内で入力してください`;
-    }
-    if (!due_date || isNaN(new Date(due_date).getTime()) || due_date < today) {
-      newErrors.due_date = "本日以降の有効な期限を選択してください";
-    }
-    if (!STATUS_OPTIONS.includes(status)) {
-      newErrors.status = "有効なステータスを選択してください";
-    }
+  //   if (!title.trim()) {
+  //     newErrors.title = "タスク名を入力してください";
+  //   } else if (title.length > MAX_TITLE) {
+  //     newErrors.title = `タスク名は${MAX_TITLE}文字以内で入力してください`;
+  //   }
+  //   if (!detail.trim()) {
+  //     newErrors.detail = "タスク名を入力してください";
+  //   } else if (detail.length > MAX_DETAIL) {
+  //     newErrors.detail = `タスク名は${MAX_DETAIL}文字以内で入力してください`;
+  //   }
+  //   if (!due_date || isNaN(new Date(due_date).getTime()) || due_date < today) {
+  //     newErrors.due_date = "本日以降の有効な期限を選択してください";
+  //   }
+  //   if (!STATUS_OPTIONS.includes(status)) {
+  //     newErrors.status = "有効なステータスを選択してください";
+  //   }
 
-    setError(newErrors);
-  }
+  //   setError(newErrors);
+  // }
 
   const isValid = Object.keys(errors).length == 0;
 
@@ -102,22 +102,60 @@ const CreateForm: React.FC<Props> = ({ modalbool, setModalbool, onCreate }) => {
   const handletitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //if (!event.target.value) return;
     setTitle(event.target.value);
+    const newErrors: typeof errors = errors;
+
+    if (!event.target.value.trim()) {
+      newErrors.title = "タスク名を入力してください";
+    } else if (event.target.value.length > MAX_TITLE) {
+      newErrors.title = `タスク名は${MAX_TITLE}文字以内で入力してください`;
+    } else {
+      newErrors.title = "";
+    }
+
+
+    setError(newErrors);
     // validate();
   };
   const handledetailChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     //if (!event.target.value) return;
     setDetail(event.target.value);
+    const newErrors: typeof errors = errors;
+
+    if (!event.target.value.trim()) {
+      newErrors.detail = "タスク名を入力してください";
+    } else if (event.target.value.length > MAX_DETAIL) {
+      newErrors.detail = `タスク名は${MAX_DETAIL}文字以内で入力してください`;
+    } else {
+      newErrors.detail = "";
+    }
+
+    setError(newErrors);
   };
   const handledateChange = (due_date: Date | null) => {
+    console.log(due_date);
     //if (!due_date) return;
     setDue_date(due_date);
+
+    if (!due_date || isNaN(new Date(due_date).getTime()) || due_date < today) {
+      errors.due_date = "本日以降の有効な期限を選択してください";
+      setError(errors);
+    } else {
+      errors.due_date = "";
+      setError(errors)
+    }
   };
   const handlestatusChange = (selected: { value: string; label: string } | null) => {
     if (!selected) {
       setStatus(''); // 非選択時の挙動（必要に応じて調整）
       return;
     }
+
     setStatus(selected.value.toUpperCase() as 'TODO' | 'IN_PROGRESS' | 'DONE');
+
+    if (!STATUS_OPTIONS.includes(status)) {
+      errors.status = "有効なステータスを選択してください";
+    }
+    setError(errors);
   };
 
   const options = [

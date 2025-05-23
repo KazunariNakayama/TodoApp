@@ -70,7 +70,7 @@ const UpdateForm = ({ task, modalbool, setModalbool, onCreate }: Props) => {
     } else if (detail.length > MAX_DETAIL) {
       newErrors.detail = `タスク名は${MAX_DETAIL}文字以内で入力してください`;
     }
-    if (!due_date || isNaN(new Date(due_date).getTime()) || due_date < today) {
+    if (!due_date || isNaN(new Date(due_date).getTime())) {
       newErrors.due_date = "本日以降の有効な期限を選択してください";
     }
     if (!STATUS_OPTIONS.includes(status)) {
@@ -155,7 +155,7 @@ const UpdateForm = ({ task, modalbool, setModalbool, onCreate }: Props) => {
       >
         <form className='flex flex-col gap-3 p-5' /*style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}*/>
           <div className='flex flex-row'>
-            <h2 className='text-3xl font-semibold text-gray-800'>新規タスク作成</h2>
+            <h2 className='text-3xl font-semibold text-gray-800'>タスク編集</h2>
             <button className="ml-auto"
               onClick={closeModal}
             >
@@ -219,7 +219,7 @@ const UpdateForm = ({ task, modalbool, setModalbool, onCreate }: Props) => {
               className={`mr-5 bg-black3 w-20 py-1 ${isValid ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-400 cursor-not-allowed"
                 }`}
               variant="contained" color="primary"
-            >作成</Button>
+            >完了</Button>
           </div>
         </form>
       </div>
