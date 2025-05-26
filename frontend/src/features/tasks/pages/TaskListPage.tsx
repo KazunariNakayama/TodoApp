@@ -8,19 +8,22 @@ import { UserFormInputs, SearchType, } from '../types.ts';
 
 
 import UserFormProps from '../components/Taskquery2.tsx';
-import CreateForm from '../components/TaskCreate.tsx';
+// import CreateForm from '../components/TaskCreate.tsx';
 
 //カレンダー直書き
-import DatePicker from "react-datepicker"
+// import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 //直書きはしない！
 //import SimpleDatePicker from '../components/TaskDue2.tsx';
 
 //プルダウン直書き
-import Select from 'react-select'
+// import Select from 'react-select'
 
 import Modal from '../components/Modal.tsx'
-import { RxCross1 } from "react-icons/rx";
+// import { RxCross1 } from "react-icons/rx";
+import UpdateForm from '../components/update_Modal.tsx';
+
+import TaskModal from '../molules/TaskModal.tsx';
 
 
 
@@ -50,7 +53,13 @@ const App = () => {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
+      const query = new URLSearchParams({
+        id: '',
+        title: '',
+        due_date: '',
+        status: '',
+      });
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch?${query}`);
       if (!response.ok) throw new Error('Failed to fetch tasks');
       const data = await response.json();
       setTasks(data);
@@ -103,9 +112,9 @@ const App = () => {
       }).toString();
 
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/search?${query}`
+        `${process.env.REACT_APP_API_URL}/api/tasks/fetch?${query}`
       );
-      console.log(`${process.env.REACT_APP_API_URL}/api/tasks/search?${query}`)
+      console.log(`${process.env.REACT_APP_API_URL}/api/tasks/fetch?${query}`)
 
       if (!response.ok) throw new Error('Failed to fetch tasks');
       const data = await response.json();
@@ -139,7 +148,7 @@ const App = () => {
       // setTasks(data); // ← これが App の状態を更新！
 
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch`);
         if (!response.ok) throw new Error('Failed to fetch tasks');
         const data = await response.json();
         setTasks(data);
@@ -186,7 +195,7 @@ const App = () => {
       // setTasks(data); // ← これが App の状態を更新！
 
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch`);
         if (!response.ok) throw new Error('Failed to fetch tasks');
         const data = await response.json();
         setTasks(data);
@@ -217,25 +226,18 @@ const App = () => {
           ＋ 新規タスク
         </button>
 
-        <Modal modalbool={isModalOpen} setModalbool={setIsModalOpen} onCreate={handleCreate} />
+        <TaskModal task={[{
+          id: '',
+          title: '',
+          detail: '',
+          due_date: new Date(),
+          status: 'TODO',
+          completed: false
+        }]} modalbool={isModalOpen} setModalbool={setIsModalOpen} onCreate={handleCreate} />
       </div>
-
-
-      {/* <button onClick={ShowModal}>タスク追加ボタン</button>
-      <CreateForm modalbool={showModal} setModalbool={setShowModal} onCreate={handleCreate}/> */}
-      {/* <h2>検索フォーム</h2> */}
-      {/* <button onClick={ShowModal}>Open Modal</button> */}
       <div className='ml-2'>
         <UserFormProps onSearch={handleSearch} />
       </div>
-      {/* <UserForm onSubmit={handleFormSubmit} /> */}
-      {/* <h2>期日検索</h2> */}
-      {/* <DateForm onSubmit={handleDueSubmit}/> */}
-      {/* <h2>検索フォーム</h2>
-      <DatePicker selected={startDate} onChange={handleChange}/>
-      {/* <SimpleDatePicker selected={startDate} onChange={handleChange}/>       */}
-      {/* <h2>ステータス検索</h2>
-      <Select options={options} /> */}
       <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
 
       <div className="App">

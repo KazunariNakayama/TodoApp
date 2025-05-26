@@ -4,25 +4,12 @@ import MyTableSubtask from "../components/SubTaskDetailBlock.tsx"; // 下で定�
 import { Task, SubTask } from "../types.ts";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
-//import UserForm from '../components/Taskquery.tsx';
 import { UserFormInputs, SearchType } from "../types.ts";
-//import DateForm from '../components/TaskDue.tsx';
-
 import UserFormProps from "../components/Taskquery2.tsx";
 import UpdateForm from "../components/update_Modal.tsx";
-//import CreateSubTaskForm from '../components/SubTaskCreate.tsx';
-
-//カレンダー直書き
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-//直書きはしない！
-//import SimpleDatePicker from '../components/TaskDue2.tsx';
-
-//プルダウン直書き
-import Select from "react-select";
-
 import CreateSubtaskForm from "../components/create_subtask_Modal.tsx";
+import TaskModal from "../molules/TaskModal.tsx";
 
 const App = () => {
   const [tasks, setTasks] = useState<Task>();
@@ -44,9 +31,6 @@ const App = () => {
     navigate("/");
   };
 
-  //   const handleChange = (date) => {
-  //     setDue_date(due_date);
-  //   }
 
   // 例：APIからデータを取得（DBのREST APIなど）
   useEffect(() => {
@@ -58,7 +42,7 @@ const App = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/search?id=${id}`
+        `${process.env.REACT_APP_API_URL}/api/tasks/fetch?id=${id}`
       );
       console.log("検索ID", id);
       const data = await response.json();
@@ -69,11 +53,8 @@ const App = () => {
         throw new Error("Failed to fetch tasks");
       }
       setTasks(data);
-
     } catch (err) {
       console.error("Failed to fetch tasks:", err);
-      // window.alert("タスクの詳細を表示できませんでした");
-      // handleBack();
     } finally {
       setLoading(false);
     }
@@ -83,7 +64,7 @@ const App = () => {
     setLoading2(true);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/${id}`
+        `${process.env.REACT_APP_API_URL}/api/tasks/subtask/${id}`
       );
       console.log("検索ID", id);
       if (!response.ok) throw new Error("Failed to fetch subtasks");
@@ -139,7 +120,7 @@ const App = () => {
       }).toString();
 
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/search?${query}`
+        `${process.env.REACT_APP_API_URL}/api/tasks/fetch?${query}`
       );
 
       if (!response.ok) throw new Error("Failed to fetch tasks");
@@ -171,7 +152,7 @@ const App = () => {
 
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/tasks/search`
+          `${process.env.REACT_APP_API_URL}/api/tasks/fetch`
         );
         if (!response.ok) throw new Error("Failed to fetch tasks");
         const data = await response.json();
@@ -229,7 +210,7 @@ const App = () => {
 
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/tasks/search?id=${id}`
+          `${process.env.REACT_APP_API_URL}/api/tasks/fetch?id=${id}`
         );
         if (!response.ok) throw new Error("Failed to fetch tasks");
         const data = await response.json();
@@ -255,7 +236,7 @@ const App = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/${id}/subtasks`,
+        `${process.env.REACT_APP_API_URL}/api/tasks/subtasks/${id}`,
         {
           method: `POST`,
           headers: {
@@ -277,7 +258,7 @@ const App = () => {
 
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/tasks/${id}`
+          `${process.env.REACT_APP_API_URL}/api/tasks/subtasks/${id}`
         );
         if (!response.ok) throw new Error("Failed to fetch subtasks");
         const data = await response.json();
@@ -316,7 +297,7 @@ const App = () => {
             </button>
           </div>
           {tasks && (
-            <UpdateForm
+            <TaskModal
               task={tasks ?? []}
               modalbool={showModal}
               setModalbool={setShowModal}
