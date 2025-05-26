@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 import DataTable from 'react-data-table-component';
-import { Task } from '../types';
+import { Task, TaskStatus } from '../types';
 import { Link } from "react-router-dom";
+import { format } from 'date-fns';
+import { ja } from 'date-fns/locale';
+
+import dayjs from 'dayjs';
+import { useForm } from 'react-hook-form';
+
 
 // interface TaskListProps {
 //     tasks: Task[];
@@ -10,9 +16,9 @@ import { Link } from "react-router-dom";
 // }
 
 type MyTableProps = {
-  tasks: Task[];
-  loading: boolean;
-  onDelete: (id: string) => void;
+    tasks: Task[];
+    loading: boolean;
+    onDelete: (id: string) => void;
 };
 
 //interface MyTable  { tasks:TaskListProps, loading:TaskListProps, onDelete:(parame: number) => void; } 
@@ -24,7 +30,8 @@ type MyTableProps = {
 
 
 
-const MyTable = ( {tasks, loading , onDelete }:MyTableProps) => {    
+
+const MyTable = ({ tasks, loading, onDelete }: MyTableProps) => {
     // const handleDelete = (id: string) => (event: React.FormEvent) => {
     //     event.preventDefault()
     //     console.log('削除ボタンが押されました:', id);
@@ -35,62 +42,94 @@ const MyTable = ( {tasks, loading , onDelete }:MyTableProps) => {
     // onDelete(id);
     // }
 
+
+    console.log("UpdateForm task: ", tasks);
+    const statusLabelMap: Record<string, string> = {
+        TODO: '未完了',
+        IN_PROGRESS: '進行中',
+        DONE: '完了',
+    };
+
+    const handleDelete = (id) => {
+        const confirmed = window.confirm('本当に削除しますか？ この操作は取り消せません。');
+        if (confirmed) {
+            onDelete(id)
+            console.log('削除されました');
+        } else {
+            console.log('キャンセルされました');
+        }
+    };
+
     const columns = [
-    {
-        name: `タスク名`,
-        selector: (row: Task) => row.title,
-        cell: (row) => (
-      <Link to={`/about/${row.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-        {row.title}
-      </Link>
-    ),
-        sortable: true,
-        filter: true,
-    },
-    {
-        name: `内容`,
-        selector: (row: Task) => row.detail,
-        sortable: true,
-        filter: true,
-    },
-    {
-        name: `期日`,
-        selector: (row: Task) => row.due_date,
-        sortable: true,
-        filter: true,
-    },
-    {
-        name: `ステータス`,
-        selector: (row: Task) => row.status,
-        sortable: true,
-        filter: true,
-    },
-    {
-        name: `削除`,
-        button: true,
-        selector: (row: Task) => row.completed ? '削除' : '',
-        cell: (row: Task) => (
-            <Button
-                variant="contained"
-                color="error"
-                value={row.id}
-                onClick={() => {console.log('削除ボタンon'); onDelete(row.id)}}
-            >
-                削除
-            </Button>
+
+        {
+            name: `タスク名`,
+            selector: (row: Task) => row.title,
+            cell: (row) => (
+                <div className='underline hover:underline  hover:text-blue-500 cursor-pointer'>
+                    <Link to={`/about/${row.id}`} style={{ textDecoration: "none", color: "inherit" }}>
+                        {row.title}
+                    </Link>
+                </div>
             ),
+            sortable: true,
+            filter: true,
+            grow: 6,
+            maxWidth: '30rem'
+        },
+        {
+            name: `内容`,
+            selector: (row: Task) => row.detail,
+            sortable: true,
+            filter: true,
+            grow: 5,
+            maxWidth: '30rem'
+        },
+        {
+            name: `期限`,
+            cell: row => format(new Date(row.due_date), 'yyyy/MM/dd', { locale: ja }),
+            sortable: true,
+            filter: true,
+            grow: 2
+        },
+        {
+            name: `ステータス`,
+            cell: (row: Task) => statusLabelMap[row.status] ?? row.status,
+            sortable: true,
+            filter: true,
+            grow: 2
+        },
+        {
+            name: `アクション`,
+            button: true,
+            selector: (row: Task) => row.completed ? '削除' : '',
+            cell: (row: Task) => (
+                <Button
+                    variant="contained"
+                    color="error"
+                    value={row.id}
+                    onClick={() => { console.log('削除ボタンon'); handleDelete(row.id) }}
+                >
+                    削除
+                </Button>
+
+            ),
+            grow: 2
         },
     ];
     return (
-        <DataTable
-            title="タスク一覧"
-            columns={columns}
-            data={tasks}
-            progressPending={loading}
-            pagination
-            highlightOnHover
-            striped
-        />
+        <div className="bg-white border-4 border-l-gray-300  rounded-2xl shadow-xl  mt-9">
+            <DataTable
+                // title="タスク一覧"
+                columns={columns}
+                data={tasks}
+                progressPending={loading}
+                pagination
+                highlightOnHover
+                striped
+                noDataComponent={<p>該当するデータがありません</p>}
+            />
+        </div>
     );
 };
 

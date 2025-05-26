@@ -2,7 +2,7 @@ export interface Task {
   id: string;
   title: string;
   detail: string;
-  due_date: string;
+  due_date: Date;
   status: TaskStatus;
   completed: boolean;
   selector?: string;

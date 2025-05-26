@@ -19,22 +19,28 @@ import "react-datepicker/dist/react-datepicker.css"
 //プルダウン直書き
 import Select from 'react-select'
 
+import Modal from '../components/Modal.tsx'
+import { RxCross1 } from "react-icons/rx";
+
+
 
 
 const App = () => {
   const [tasks, setTasks] = useState<Task[]>();
   const [loading, setLoading] = useState(true);
-  
+
   //検索関連の宣言
   const [keyword, setKeyword] = useState('');
   const initialDate = new Date();
   const [due_date, setDue_date] = useState(initialDate);
-  const [status, setStatus] = useState<'TODO'|'IN_PROGRESS'|'DONE'>('TODO');
+  const [status, setStatus] = useState<'TODO' | 'IN_PROGRESS' | 'DONE'>('TODO');
 
 
-//   const handleChange = (date) => {
-//     setDue_date(due_date);
-//   }
+
+
+  //   const handleChange = (date) => {
+  //     setDue_date(due_date);
+  //   }
 
   // 例：APIからデータを取得（DBのREST APIなど）
   useEffect(() => {
@@ -82,7 +88,7 @@ const App = () => {
     { value: 'todo', label: '未完了' },
     { value: 'in_progress', label: '進行中' },
     { value: 'Done', label: '完了' },
-    { value: '', label:'選択を外す'}
+    { value: '', label: '選択を外す' }
   ]
 
   const handleSearch = async (params: { keyword: string; due_date: string; status: string }) => {
@@ -113,34 +119,37 @@ const App = () => {
 
 
   <UserFormProps onSearch={handleSearch} />
-  
 
-  const handleDelete = async (params: string ) => {
+
+  const handleDelete = async (params: string) => {
     console.log('id:', params);
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/${params}}`,{
-          method:`DELETE`,
-        }
+        `${process.env.REACT_APP_API_URL}/api/tasks/${params}}`, {
+        method: `DELETE`,
+      }
       );
 
-      if (!response.ok) throw new Error('Failed to Delete Task');
+      if (!response.ok) {
+        window.alert('タスクの削除に失敗しました');
+        throw new Error('Failed to Delete Task');
+      }
       // const data = await response.json();
       // setTasks(data); // ← これが App の状態を更新！
-      
-      try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
-      if (!response.ok) throw new Error('Failed to fetch tasks');
-      const data = await response.json();
-      setTasks(data);
-    } catch (err) {
-      console.error('Failed to fetch tasks:', err);
-    } finally {
-      setLoading(false);
-    }
 
-      
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
+        if (!response.ok) throw new Error('Failed to fetch tasks');
+        const data = await response.json();
+        setTasks(data);
+      } catch (err) {
+        console.error('Failed to fetch tasks:', err);
+      } finally {
+        setLoading(false);
+      }
+
+
     } catch (err) {
       console.error('Failed to fetch tasks:', err);
     } finally {
@@ -148,9 +157,9 @@ const App = () => {
     }
   };
 
-  <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete}  />
+  <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
 
-  const [showModal, setShowModal]=useState(false);
+  const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
     setShowModal(true);
   }
@@ -160,46 +169,65 @@ const App = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks`,{
-          method:`POST`,
-          headers:{
-            'Content-Type':'application/json'
-          },
-          body: JSON.stringify(params)
-        }
+        `${process.env.REACT_APP_API_URL}/api/tasks`, {
+        method: `POST`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+      }
       );
 
-      if (!response.ok) throw new Error('Failed to Create Task');
+      if (!response.ok) {
+        window.alert("タスクの作成に失敗しました")
+        throw new Error('Failed to Create Task');
+      }
       // const data = await response.json();
       // setTasks(data); // ← これが App の状態を更新！
-      
+
       try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
-      if (!response.ok) throw new Error('Failed to fetch tasks');
-      const data = await response.json();
-      setTasks(data);
-    } catch (err) {
-      console.error('Failed to fetch tasks:', err);
-    } finally {
-      setLoading(false);
-    }
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
+        if (!response.ok) throw new Error('Failed to fetch tasks');
+        const data = await response.json();
+        setTasks(data);
+      } catch (err) {
+        console.error('Failed to fetch tasks:', err);
+      } finally {
+        setLoading(false);
+      }
     } catch (err) {
       console.error('Failed to fetch tasks:', err);
     } finally {
       setLoading(false);
     }
   };
-  
 
+  // モーダルの開閉状態を親コンポーネントのstateで管理
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   return (
     <div>
-      <button onClick={ShowModal}>タスク追加ボタン</button>
-      <CreateForm modalbool={showModal} setModalbool={setShowModal} onCreate={handleCreate}/>
-      <h2>検索フォーム</h2>
-      <button onClick={ShowModal}>Open Modal</button>
-      <UserFormProps onSearch={handleSearch} />
+      <div className='flex flex-row mb-5 mt-5'>
+        <h2 className='text-3xl font-semibold text-gray-800 ml-2'>タスク管理</h2>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"
+        >
+          ＋ 新規タスク
+        </button>
+
+        <Modal modalbool={isModalOpen} setModalbool={setIsModalOpen} onCreate={handleCreate} />
+      </div>
+
+
+      {/* <button onClick={ShowModal}>タスク追加ボタン</button>
+      <CreateForm modalbool={showModal} setModalbool={setShowModal} onCreate={handleCreate}/> */}
+      {/* <h2>検索フォーム</h2> */}
+      {/* <button onClick={ShowModal}>Open Modal</button> */}
+      <div className='ml-2'>
+        <UserFormProps onSearch={handleSearch} />
+      </div>
       {/* <UserForm onSubmit={handleFormSubmit} /> */}
       {/* <h2>期日検索</h2> */}
       {/* <DateForm onSubmit={handleDueSubmit}/> */}
@@ -207,10 +235,14 @@ const App = () => {
       <DatePicker selected={startDate} onChange={handleChange}/>
       {/* <SimpleDatePicker selected={startDate} onChange={handleChange}/>       */}
       {/* <h2>ステータス検索</h2>
-      <Select options={options} /> */} 
-      <h2>ユーザー一覧</h2>
+      <Select options={options} /> */}
       <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
-    </div>
+
+      <div className="App">
+
+      </div>
+
+    </div >
   );
 };
 

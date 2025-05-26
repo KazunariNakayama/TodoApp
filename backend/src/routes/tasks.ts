@@ -68,7 +68,7 @@ tasks.get('/search', async (c) => {
 //   const subtasks = await getIdSubTasks(id);
 //   return c.json({tasks,subtasks});
 // });
-//指定タスクのサブタスクの取得
+//NOTE:指定タスクのサブタスクの取得
 tasks.get('/:id', async (c) => {
   const id = parseInt(c.req.param('id'));
   const subtasks = await getIdSubTasks(id);
