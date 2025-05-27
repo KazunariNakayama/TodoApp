@@ -1,31 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import MyTable from '../components/TaskList.tsx'; // 下で定義するテーブル表示コンポーネント
+import TaskList from './TaskList.tsx';
 import { Task } from '../types.ts';
-
-//import UserForm from '../components/Taskquery.tsx';
 import { UserFormInputs, SearchType, } from '../types.ts';
-//import DateForm from '../components/TaskDue.tsx';
-
-
-import UserFormProps from '../components/Taskquery2.tsx';
-// import CreateForm from '../components/TaskCreate.tsx';
-
-//カレンダー直書き
-// import DatePicker from "react-datepicker"
+import TaskSearch from './TaskSearch.tsx';
 import "react-datepicker/dist/react-datepicker.css"
-//直書きはしない！
-//import SimpleDatePicker from '../components/TaskDue2.tsx';
-
-//プルダウン直書き
-// import Select from 'react-select'
-
-import Modal from '../components/Modal.tsx'
-// import { RxCross1 } from "react-icons/rx";
-import UpdateForm from '../components/update_Modal.tsx';
-
-import TaskModal from '../molules/TaskModal.tsx';
-
-
+import TaskModal from '../../components/TaskModal.tsx';
 
 
 const App = () => {
@@ -38,12 +17,6 @@ const App = () => {
   const [due_date, setDue_date] = useState(initialDate);
   const [status, setStatus] = useState<'TODO' | 'IN_PROGRESS' | 'DONE'>('TODO');
 
-
-
-
-  //   const handleChange = (date) => {
-  //     setDue_date(due_date);
-  //   }
 
   // 例：APIからデータを取得（DBのREST APIなど）
   useEffect(() => {
@@ -69,29 +42,6 @@ const App = () => {
       setLoading(false);
     }
   };
-
-  const handleFormSubmit = (data: UserFormInputs) => {
-    // setLoading(true);
-    // try {
-    //   const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
-    //   if (!response.ok) throw new Error('Failed to fetch tasks');
-    //   const data = await response.json();
-    //   setTasks(data);
-    // } catch (err) {
-    //   console.error('Failed to fetch tasks:', err);
-    // } finally {
-    //   setLoading(false);
-    // //console.log('フォーム送信データ:', data);
-    // //alert(`送信成功：${data.name} `);
-    // // ここでAPIなどに送信してもOK
-  };
-
-
-  // const handleDueSubmit = (data) => {
-  //   console.log('期日送信データ:', data);
-  //   alert(`送信成功`);
-  // }
-
 
   const options = [
     { value: 'todo', label: '未完了' },
@@ -127,9 +77,6 @@ const App = () => {
   };
 
 
-  <UserFormProps onSearch={handleSearch} />
-
-
   const handleDelete = async (params: string) => {
     console.log('id:', params);
     setLoading(true);
@@ -144,8 +91,6 @@ const App = () => {
         window.alert('タスクの削除に失敗しました');
         throw new Error('Failed to Delete Task');
       }
-      // const data = await response.json();
-      // setTasks(data); // ← これが App の状態を更新！
 
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch`);
@@ -165,8 +110,6 @@ const App = () => {
       setLoading(false);
     }
   };
-
-  <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
 
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
@@ -236,9 +179,9 @@ const App = () => {
         }]} modalbool={isModalOpen} setModalbool={setIsModalOpen} onCreate={handleCreate} />
       </div>
       <div className='ml-2'>
-        <UserFormProps onSearch={handleSearch} />
+        <TaskSearch onSearch={handleSearch} />
       </div>
-      <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
+      <TaskList tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
 
       <div className="App">
 

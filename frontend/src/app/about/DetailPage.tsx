@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import DetailBlock from "../components/TaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
-import MyTableSubtask from "../components/SubTaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
+import TaskDetailBlock from "./TaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
+import SubTaskDetailBlock from "./SubTaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
 import { Task, SubTask } from "../types.ts";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { UserFormInputs, SearchType } from "../types.ts";
-import UserFormProps from "../components/Taskquery2.tsx";
+import TaskSearch from "../home/TaskSearch.tsx";
 import UpdateForm from "../components/update_Modal.tsx";
 import "react-datepicker/dist/react-datepicker.css";
-import CreateSubtaskForm from "../components/create_subtask_Modal.tsx";
-import TaskModal from "../molules/TaskModal.tsx";
+import CreateSubtaskModal from "./createSubtaskModal.tsx";
+import TaskModal from "../../components/TaskModal.tsx";
 
 const App = () => {
   const [tasks, setTasks] = useState<Task>();
@@ -133,7 +133,7 @@ const App = () => {
     }
   };
 
-  <UserFormProps onSearch={handleSearch} />;
+  // <TaskSearch onSearch={handleSearch} />;
 
   const handleDelete = async (params: string) => {
     console.log("id:", params);
@@ -304,7 +304,7 @@ const App = () => {
               onCreate={handleUpdate}
             />
           )}
-          <DetailBlock tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
+          <TaskDetailBlock tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />
           <br />
           <div className='flex flex-row mb-5 mt-5'>
             <h2 className='text-3xl font-semibold text-gray-800 ml-2'>サブタスク</h2>
@@ -317,13 +317,13 @@ const App = () => {
 
           </div>
           {tasks && (
-            <CreateSubtaskForm
+            <CreateSubtaskModal
               modalbool={showSubModal}
               setModalbool={setShowSubModal}
               onCreate={handleCreate}
             />
           )}
-          <MyTableSubtask subtasks={subtasks ?? []} loading={loading2} />
+          <SubTaskDetailBlock subtasks={subtasks ?? []} loading={loading2} />
         </div>
       )}
     </div>

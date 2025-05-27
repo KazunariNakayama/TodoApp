@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App.js';
-import TaskListPage from './features/tasks/pages/TaskListPage.tsx';
+import TaskListPage from './app/home/TaskListPage.tsx';
 import './index.css';
 //import App from './App.tsx';
 

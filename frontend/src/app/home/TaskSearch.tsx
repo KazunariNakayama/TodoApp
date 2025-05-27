@@ -1,4 +1,3 @@
-//import { Select } from '@mui/material';
 import Select from 'react-select'
 import React, { useState } from 'react';
 import DatePicker from "react-datepicker";
@@ -7,28 +6,20 @@ import { useForm } from 'react-hook-form';
 import { ja } from 'date-fns/locale';
 
 
-interface UserFomeProps {
-    onSearch: (parames: { keyword: string, due_date: string, status: string }) => void;
-}
-
-const UserFormProps = ({ onSearch }) => {
+const TaskSearch = ({ onSearch }) => {
     const [keyword, setKeyword] = useState('');
     const initialDate = new Date();
     const [due_date, setDue_date] = useState(initialDate);
     const [status, setStatus] = useState('');
 
     const handlekeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        //if (!event.target.value) return;
         setKeyword(event.target.value);
     };
     const handledateChange = (due_date: Date | null) => {
         if (!due_date) return;
         setDue_date(due_date);
     };
-    // const handlestatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     if (!event.target.value) return;
-    //     setStatus('DONE');
-    // };
+
     const handlestatusChange = (selected: { value: string; label: string } | null) => {
         if (!selected) {
             setStatus(''); // 非選択時の挙動（必要に応じて調整）
@@ -103,4 +94,4 @@ const UserFormProps = ({ onSearch }) => {
     );
 }
 
-export default UserFormProps;
+export default TaskSearch;

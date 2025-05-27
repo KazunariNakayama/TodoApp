@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 //import AboutPage from './pages/AboutPage';
 //import NotFound from './pages/NotFound';
-import TaskListPage from './features/tasks/pages/TaskListPage.tsx';
-import DetailePage from './features/tasks/pages/DetailPage.tsx';
-import NotFound from './features/tasks/pages/NotFound.tsx';
+import TaskListPage from './app/home/TaskListPage.tsx';
+import DetailePage from './app/about/DetailPage.tsx';
+import NotFound from './app/otherpages/NotFound.tsx';
 
 
 function App() {

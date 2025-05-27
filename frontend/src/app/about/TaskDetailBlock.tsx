@@ -12,7 +12,7 @@ type MyTableProps = {
     onDelete: (id: string) => void;
 };
 
-const DetailBlock = ({ tasks, loading, onDelete }: MyTableProps) => {
+const TaskDetailBlock = ({ tasks, loading, onDelete }: MyTableProps) => {
     console.log("UpdateForm task: ", tasks);
     const options = [
         { value: 'todo', label: '未完了' },
@@ -114,4 +114,4 @@ const DetailBlock = ({ tasks, loading, onDelete }: MyTableProps) => {
     );
 };
 
-export default DetailBlock;
+export default TaskDetailBlock;

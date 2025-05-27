@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import MyTable from './features/tasks/components/TaskList.tsx'; // 下で定義するテーブル表示コンポーネント
+import MyTable from './app/home/TaskList.tsx'; // 下で定義するテーブル表示コンポーネント
 
 const App = () => {
-    const [tasks, setTasks] = useState<Task[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
-  
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
 
   // 例：APIからデータを取得（DBのREST APIなど）
   useEffect(() => {

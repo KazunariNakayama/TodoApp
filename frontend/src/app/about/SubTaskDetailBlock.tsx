@@ -9,7 +9,7 @@ type MyTableProps = {
     loading: boolean;
 };
 
-const MyTableSubtask = ({ subtasks, loading }: MyTableProps) => {
+const SubTaskDetailBlock = ({ subtasks, loading }: MyTableProps) => {
     const statusLabelMap: Record<string, string> = {
         TODO: '未完了',
         IN_PROGRESS: '進行中',
@@ -57,4 +57,4 @@ const MyTableSubtask = ({ subtasks, loading }: MyTableProps) => {
 };
 
 
-export default MyTableSubtask;
+export default SubTaskDetailBlock;

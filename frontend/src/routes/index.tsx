@@ -1,7 +1,7 @@
 // src/routes/index.tsx
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import TaskListPage from '../features/tasks/pages/TaskListPage.tsx';
+import TaskListPage from '../app/home/TaskListPage.tsx';
 
 const AppRoutes = () => {
   return (
