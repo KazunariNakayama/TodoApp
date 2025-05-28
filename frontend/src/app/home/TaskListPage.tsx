@@ -6,6 +6,7 @@ import TaskSearch from './TaskSearch.tsx';
 import "react-datepicker/dist/react-datepicker.css"
 import TaskModal from '../../components/TaskModal.tsx';
 import useFetchTasks from '../huck/useTaskFetch.ts';
+import { useNavigate } from "react-router-dom";
 
 
 const App = () => {
@@ -40,7 +41,7 @@ const App = () => {
   // };
 
 
-  const handleDelete = async (id: string) => {
+  const handleArchive = async (id: string) => {
     console.log('id:', id);
     setLoading(true);
     try {
@@ -61,10 +62,11 @@ const App = () => {
       }
 
       // 最新タスクを再取得
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch`);
-      if (!res.ok) throw new Error('Failed to fetch tasks');
-      const data = await res.json();
-      setTasks(data);
+      await fetchTasks({ visibility: 'ACTIVE' });
+      // const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch?visibility=ACTIVE`);
+      // if (!res.ok) throw new Error('Failed to fetch tasks');
+      // const data = await res.json();
+      // setTasks(data);
 
     } catch (err) {
       console.error('Failed to update visibility:', err);
@@ -120,6 +122,11 @@ const App = () => {
   // モーダルの開閉状態を親コンポーネントのstateで管理
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate("/archived/");
+  };
+
   return (
     <div>
       <div className='flex flex-row mb-5 mt-5'>
@@ -143,11 +150,18 @@ const App = () => {
       <div className='ml-2'>
         <TaskSearch fetchTasks={fetchTasks} />
       </div>
-      <TaskList tasks={ftasks ?? []} loading={floading} onDelete={handleDelete} />
+      <TaskList tasks={ftasks ?? []} loading={floading} onArchive={handleArchive} />
 
       <div className="App">
 
       </div>
+
+      <button
+        onClick={handleBack}
+        className="ml-auto mt-3 mb-3 mr-2 font-bold text-black bg-white border border-black px-4 py-1 rounded hover:bg-black hover:text-white transition"
+      >
+        アーカイブしたタスク
+      </button>
 
     </div >
   );

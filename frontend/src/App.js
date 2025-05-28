@@ -1,9 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-//import AboutPage from './pages/AboutPage';
-//import NotFound from './pages/NotFound';
 import TaskListPage from './app/home/TaskListPage.tsx';
 import DetailePage from './app/about/DetailPage.tsx';
 import NotFound from './app/otherpages/NotFound.tsx';
+import TaskArchiveList from './app/archive/TaskArchiveListPage.tsx';
 
 
 function App() {
@@ -12,7 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<TaskListPage />} />
         <Route path="/about/:id" element={<DetailePage />} />
-        {/* <Route path="*" element={<NotFound />} />  */}
+        <Route path="/archived/" element={<TaskArchiveList/>} /> 
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

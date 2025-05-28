@@ -10,11 +10,11 @@ import { ja } from 'date-fns/locale';
 type MyTableProps = {
     tasks: Task[];
     loading: boolean;
-    onDelete: (id: string) => void;
+    onArchive: (id: string) => void;
 };
 
 
-const TaskList = ({ tasks, loading, onDelete }: MyTableProps) => {
+const TaskList = ({ tasks, loading, onArchive }: MyTableProps) => {
     console.log("UpdateForm task: ", tasks);
     const statusLabelMap: Record<string, string> = {
         TODO: '未完了',
@@ -23,13 +23,15 @@ const TaskList = ({ tasks, loading, onDelete }: MyTableProps) => {
     };
 
     const handleDelete = (id) => {
-        const confirmed = window.confirm('本当に削除しますか？ この操作は取り消せません。');
-        if (confirmed) {
-            onDelete(id)
-            console.log('削除されました');
-        } else {
-            console.log('キャンセルされました');
-        }
+        // //const confirmed = window.confirm('本当に削除しますか？ この操作は取り消せません。');
+        // if (confirmed) {
+        //     onArchive(id)
+        //     console.log('削除されました');
+        // } else {
+        //     console.log('キャンセルされました');
+        // }
+        onArchive(id)
+        console.log('アーカイブされました');
     };
 
     const columns = [
@@ -80,7 +82,7 @@ const TaskList = ({ tasks, loading, onDelete }: MyTableProps) => {
                     variant="contained"
                     color="error"
                     value={row.id}
-                    onClick={() => { console.log('削除ボタンon'); handleDelete(row.id) }}
+                    onClick={() => { console.log('削除ボタンon'); onArchive(row.id) }}
                     sx={{
                         fontSize: '0.9rem', // 文字サイズを小さく
                         padding: '6px 9px', // 上下左右の余白を調整

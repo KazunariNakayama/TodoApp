@@ -104,33 +104,33 @@ const App = () => {
     { value: "", label: "選択を外す" },
   ];
 
-  const handleSearch = async (params: {
-    keyword: string;
-    due_date: string;
-    status: string;
-  }) => {
-    console.log("検索条件:", params);
-    setLoading(true);
-    try {
-      const query = new URLSearchParams({
-        title: params.keyword,
-        due_date: params.due_date,
-        status: params.status,
-      }).toString();
+  // const handleSearch = async (params: {
+  //   keyword: string;
+  //   due_date: string;
+  //   status: string;
+  // }) => {
+  //   console.log("検索条件:", params);
+  //   setLoading(true);
+  //   try {
+  //     const query = new URLSearchParams({
+  //       title: params.keyword,
+  //       due_date: params.due_date,
+  //       status: params.status,
+  //     }).toString();
 
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/fetch?${query}`
-      );
+  //     const response = await fetch(
+  //       `${process.env.REACT_APP_API_URL}/api/tasks/fetch?${query}`
+  //     );
 
-      if (!response.ok) throw new Error("Failed to fetch tasks");
-      const data = await response.json();
-      setTasks(data); // ← これが App の状態を更新！
-    } catch (err) {
-      console.error("Failed to fetch tasks:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (!response.ok) throw new Error("Failed to fetch tasks");
+  //     const data = await response.json();
+  //     setTasks(data); // ← これが App の状態を更新！
+  //   } catch (err) {
+  //     console.error("Failed to fetch tasks:", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   // <TaskSearch onSearch={handleSearch} />;
 

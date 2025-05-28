@@ -51,6 +51,10 @@ tasks.put('/archive/:id', async (c) => {
 // タスクの削除
 tasks.delete('/:id', async (c) => {
   const id = parseInt(c.req.param('id'));
+  const tasks = await getTasksSearch(id, '', '', '', 'ARCHIVED');
+  if (!tasks || tasks.length === 0) {
+    throw new CustomError("Only archived tasks can be deleted or task not found", 400);
+  }
   const result = await deleteTask(id);
   if (!result || result.length === 0) {
     throw new CustomError("Task not found", 404);

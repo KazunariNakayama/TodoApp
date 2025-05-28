@@ -7,8 +7,10 @@ import "react-datepicker/dist/react-datepicker.css"
 import TaskModal from '../../components/TaskModal.tsx';
 import useFetchTasks from '../huck/useTaskFetch.ts';
 
+import { useNavigate } from "react-router-dom";
 
-const App = () => {
+
+const TaskArchiveList = () => {
   const [tasks, setTasks] = useState<Task[]>();
   const [loading, setLoading] = useState(true);
 
@@ -20,7 +22,7 @@ const App = () => {
   const { ftasks, floading, fetchTasks } = useFetchTasks();
 
   useEffect(() => {
-    fetchTasks({});
+    fetchTasks({ visibility: 'ARCHIVED' });
   }, []);
 
   const options = [
@@ -40,6 +42,41 @@ const App = () => {
   // };
 
 
+  const handleActive = async (id: string) => {
+    console.log('id:', id);
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/tasks/archive/${id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ visibility: 'ACTIVE' }),
+        }
+      );
+
+      if (!response.ok) {
+        window.alert('タスクの削除に失敗しました');
+        throw new Error('Failed to delete task');
+      }
+
+      // 最新タスクを再取得
+      await fetchTasks({ visibility: 'ARCHIVED' });
+      // const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch?visibility=ACTIVE`);
+      // if (!res.ok) throw new Error('Failed to fetch tasks');
+      // const data = await res.json();
+      // setTasks(data);
+
+    } catch (err) {
+      console.error('Failed to update visibility:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   const handleDelete = async (params: string) => {
     console.log('id:', params);
     setLoading(true);
@@ -55,16 +92,8 @@ const App = () => {
         throw new Error('Failed to Delete Task');
       }
 
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch`);
-        if (!response.ok) throw new Error('Failed to fetch tasks');
-        const data = await response.json();
-        setTasks(data);
-      } catch (err) {
-        console.error('Failed to fetch tasks:', err);
-      } finally {
-        setLoading(false);
-      }
+      // 最新タスクを再取得
+      await fetchTasks({ visibility: 'ARCHIVED' });
 
 
     } catch (err) {
@@ -120,11 +149,23 @@ const App = () => {
   // モーダルの開閉状態を親コンポーネントのstateで管理
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate("/");
+  };
+
   return (
     <div>
+      <button
+        onClick={handleBack}
+        className="ml-auto mt-3 mb-3 mr-2 font-bold text-black bg-white border border-black px-4 py-1 rounded hover:bg-black hover:text-white transition"
+      >
+        ← タスク一覧に戻る
+      </button>
       <div className='flex flex-row mb-5 mt-5'>
         <h2 className='text-3xl font-semibold text-gray-800 ml-2'>タスク管理</h2>
-        <button
+        {/* <button
           onClick={() => setIsModalOpen(true)}
           className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"
         >
@@ -138,12 +179,12 @@ const App = () => {
           due_date: new Date(),
           status: 'TODO',
           completed: false
-        }]} modalbool={isModalOpen} setModalbool={setIsModalOpen} onCreate={handleCreate} />
+        }]} modalbool={isModalOpen} setModalbool={setIsModalOpen} onCreate={handleCreate} /> */}
       </div>
       <div className='ml-2'>
         <TaskSearch fetchTasks={fetchTasks} />
       </div>
-      <TaskList tasks={ftasks ?? []} loading={floading} onDelete={handleDelete} />
+      <TaskList tasks={ftasks ?? []} loading={floading} onActive={handleActive} onDelete={handleDelete} />
 
       <div className="App">
 
@@ -153,5 +194,5 @@ const App = () => {
   );
 };
 
-export default App;
+export default TaskArchiveList;
 

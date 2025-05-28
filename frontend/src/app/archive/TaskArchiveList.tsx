@@ -6,15 +6,15 @@ import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
 
 
-
 type MyTableProps = {
     tasks: Task[];
     loading: boolean;
+    onActive: (id: string) => void;
     onDelete: (id: string) => void;
 };
 
 
-const TaskList = ({ tasks, loading, onDelete }: MyTableProps) => {
+const TaskList = ({ tasks, loading, onActive, onDelete }: MyTableProps) => {
     console.log("UpdateForm task: ", tasks);
     const statusLabelMap: Record<string, string> = {
         TODO: '未完了',
@@ -31,9 +31,7 @@ const TaskList = ({ tasks, loading, onDelete }: MyTableProps) => {
             console.log('キャンセルされました');
         }
     };
-
     const columns = [
-
         {
             name: `タスク名`,
             selector: (row: Task) => row.title,
@@ -72,7 +70,24 @@ const TaskList = ({ tasks, loading, onDelete }: MyTableProps) => {
             grow: 2
         },
         {
-            name: `アクション`,
+            name: `復元`,
+            button: true,
+            selector: (row: Task) => row.completed ? '復元' : '',
+            cell: (row: Task) => (
+                <Button
+                    variant="contained"
+                    color="warning"
+                    value={row.id}
+                    onClick={() => { console.log('復元ボタンon'); onActive(row.id) }}
+                >
+                    復元
+                </Button>
+
+            ),
+            grow: 2
+        },
+        {
+            name: `削除`,
             button: true,
             selector: (row: Task) => row.completed ? '削除' : '',
             cell: (row: Task) => (
