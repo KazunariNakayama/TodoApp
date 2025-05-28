@@ -165,21 +165,7 @@ const TaskArchiveList = () => {
       </button>
       <div className='flex flex-row mb-5 mt-5'>
         <h2 className='text-3xl font-semibold text-gray-800 ml-2'>タスク管理</h2>
-        {/* <button
-          onClick={() => setIsModalOpen(true)}
-          className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"
-        >
-          ＋ 新規タスク
-        </button>
 
-        <TaskModal task={[{
-          id: '',
-          title: '',
-          detail: '',
-          due_date: new Date(),
-          status: 'TODO',
-          completed: false
-        }]} modalbool={isModalOpen} setModalbool={setIsModalOpen} onCreate={handleCreate} /> */}
       </div>
       <div className='ml-2'>
         <TaskSearch fetchTasks={fetchTasks} />

@@ -19,8 +19,6 @@ const TaskSearch = ({ fetchTasks }: TaskSearchProps) => {
     const [due_date, setDue_date] = useState(initialDate);
     const [status, setStatus] = useState('');
     // const { ftasks, floading, fetchTasks } = useFetchTasks();
-
-
     // useEffect(() => {
     //     console.log('fetchTasks type:', typeof fetchTasks); // ← function でなければNG
     // }, [fetchTasks]);

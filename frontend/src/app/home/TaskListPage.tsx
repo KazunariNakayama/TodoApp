@@ -158,7 +158,7 @@ const App = () => {
 
       <button
         onClick={handleBack}
-        className="ml-auto mt-3 mb-3 mr-2 font-bold text-black bg-white border border-black px-4 py-1 rounded hover:bg-black hover:text-white transition"
+        className="ml-auto mt-3 mb-3 mr-2 font-bold text-black bg-white border border-black text-l px-4 py-4 rounded hover:bg-red-600 hover:text-white transition"
       >
         アーカイブしたタスク
       </button>

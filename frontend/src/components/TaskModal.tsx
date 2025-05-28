@@ -5,6 +5,7 @@ import { Button } from '@mui/material';
 import { ja } from 'date-fns/locale';
 import { Task } from '../app/types';
 
+
 const MAX_TITLE = 20;
 const MAX_DETAIL = 255;
 const STATUS_OPTIONS = ["TODO", "IN_PROGRESS", "DONE"];

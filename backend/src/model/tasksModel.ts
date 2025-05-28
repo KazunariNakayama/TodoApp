@@ -12,6 +12,54 @@ type Task = {
 };
 
 // [INFO]タスクを取得・検索する
+// export const getTasksSearch = async (
+//     rawid: string,
+//     title: string,
+//     status: string,
+//     due_date: string,
+//     visibility: string
+// ) => {
+//     const conditions = [];
+//     const params = [];
+//     const id = rawid ? parseInt(rawid, 10) : undefined;
+//     if (id) {
+//         conditions.push(`id = $${params.length + 1}`);
+//         params.push(id);
+//     }
+//     if (title) {
+//         conditions.push(
+//             `(title LIKE $${params.length + 1} OR detail LIKE $${params.length + 1})`
+//         );
+//         params.push(`%${title}%`);
+//     }
+//     if (status) {
+//         conditions.push(`status = $${params.length + 1}::"TaskStatus"`);
+//         params.push(status);
+//     }
+//     if (due_date) {
+//         const parsed = new Date(due_date);
+//         if (!isNaN(parsed.getTime())) {
+//             const endDate = new Date(parsed);
+//             endDate.setDate(endDate.getDate() + 1);
+//             endDate.setHours(0, 0, 0, 0);
+
+//             conditions.push(`due_date < $${params.length + 1}::timestamp`);
+//             params.push(endDate.toISOString());
+//         } else {
+//             throw new Error(`Invalid due_date format: ${due_date}`);
+//         }
+//     }
+//     if (visibility) {
+//         conditions.push(`visibility = $${params.length + 1}::"TaskVisibility"`);
+//         params.push(visibility);
+//     }
+//     const whereClause =
+//         conditions.length > 0 ? "WHERE " + conditions.join(" AND ") : "";
+//     const query = `SELECT * FROM "Task" ${whereClause};`;
+//     const tasks = (await prisma.$queryRawUnsafe(query, ...params)) as any[];
+//     return tasks;
+// };
+
 export const getTasksSearch = async (
     rawid: string,
     title: string,
