@@ -10,7 +10,6 @@ type TaskSearchProps = {
         keyword?: string;
         due_date?: string;
         status?: string;
-        visibility?: string;
     }) => Promise<void>;
 };
 
@@ -19,8 +18,6 @@ const TaskSearch = ({ fetchTasks }: TaskSearchProps) => {
     const initialDate = new Date();
     const [due_date, setDue_date] = useState(initialDate);
     const [status, setStatus] = useState('');
-    const [visibility, setVisibility] = useState('ACTIVE');
-
     // const { ftasks, floading, fetchTasks } = useFetchTasks();
 
 
@@ -59,7 +56,6 @@ const TaskSearch = ({ fetchTasks }: TaskSearchProps) => {
             keyword,
             due_date: due_date,
             status,
-            visibility,
         });
         console.log('keyword', keyword);
     }

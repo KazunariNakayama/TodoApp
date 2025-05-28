@@ -46,7 +46,7 @@ const TaskList = ({ tasks, loading, onDelete }: MyTableProps) => {
             ),
             sortable: true,
             filter: true,
-            grow: 5,
+            grow: 6,
             maxWidth: '30rem'
         },
         {
@@ -62,7 +62,7 @@ const TaskList = ({ tasks, loading, onDelete }: MyTableProps) => {
             cell: row => format(new Date(row.due_date), 'yyyy/MM/dd', { locale: ja }),
             sortable: true,
             filter: true,
-            grow: 3
+            grow: 2
         },
         {
             name: `ステータス`,
@@ -81,18 +81,12 @@ const TaskList = ({ tasks, loading, onDelete }: MyTableProps) => {
                     color="error"
                     value={row.id}
                     onClick={() => { console.log('削除ボタンon'); handleDelete(row.id) }}
-                    sx={{
-                        fontSize: '0.9rem', // 文字サイズを小さく
-                        padding: '6px 9px', // 上下左右の余白を調整
-                        minWidth: 'unset',  // 幅の最小値制限を解除
-                        whiteSpace: 'nowrap', // 折り返しを防ぐ
-                    }}
                 >
-                    アーカイブ
+                    削除
                 </Button>
 
             ),
-            grow: 3
+            grow: 2
         },
     ];
     return (

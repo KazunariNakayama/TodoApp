@@ -36,6 +36,12 @@ const TaskModal = ({ task, modalbool, setModalbool, onCreate }: Props) => {
         status?: string;
     }>({});
 
+    const [touched, setTouched] = useState({
+        title: false,
+        detail: false,
+    });
+
+
     useEffect(() => {
         console.log("UpdateForm task: ", task[0]);
         if (task[0]) {
@@ -59,26 +65,39 @@ const TaskModal = ({ task, modalbool, setModalbool, onCreate }: Props) => {
     const validate = () => {
         const newErrors: typeof errors = {};
 
-        if (!title.trim()) {
-            newErrors.title = "タスク名を入力してください";
-        } else if (title.length > MAX_TITLE) {
-            newErrors.title = `タスク名は${MAX_TITLE}文字以内で入力してください`;
+        if (touched.title) {
+            if (!title.trim()) {
+                newErrors.title = "タスク名を入力してください";
+            } else if (title.length > MAX_TITLE) {
+                newErrors.title = `タスク名は${MAX_TITLE}文字以内で入力してください`;
+            }
         }
-        if (!detail.trim()) {
-            newErrors.detail = "タスク名を入力してください";
-        } else if (detail.length > MAX_DETAIL) {
-            newErrors.detail = `タスク名は${MAX_DETAIL}文字以内で入力してください`;
+
+        if (touched.detail) {
+            if (!detail.trim()) {
+                newErrors.detail = "内容を入力してください";
+            } else if (detail.length > MAX_DETAIL) {
+                newErrors.detail = `内容は${MAX_DETAIL}文字以内で入力してください`;
+            }
         }
+
+        // 期日とステータスのバリデーションは常時適用（既存通り）
         if (!due_date || isNaN(new Date(due_date).getTime())) {
             newErrors.due_date = "本日以降の有効な期限を選択してください";
         }
         if (!STATUS_OPTIONS.includes(status)) {
             newErrors.status = "有効なステータスを選択してください";
         }
-        setError(newErrors);
-    }
 
-    const isValid = Object.keys(errors).length == 0;
+        setError(newErrors);
+    };
+
+
+    const isValid =
+        title.trim() !== '' &&
+        detail.trim() !== '' &&
+        Object.keys(errors).length === 0;
+
 
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -89,10 +108,14 @@ const TaskModal = ({ task, modalbool, setModalbool, onCreate }: Props) => {
 
     const handletitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(event.target.value);
+        if (!touched.title) setTouched(prev => ({ ...prev, title: true }));
     };
+
     const handledetailChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setDetail(event.target.value);
+        if (!touched.detail) setTouched(prev => ({ ...prev, detail: true }));
     };
+
     const handledateChange = (due_date: Date | null) => {
         setDue_date(due_date);
     };

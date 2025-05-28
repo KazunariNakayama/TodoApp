@@ -1,6 +1,6 @@
 // src/routes/tasks.ts
 import { Hono } from 'hono';
-import { createTask, updateTask, deleteTask, createSubtask, getSubTasks, getTasksSearch } from '../model/tasksModel';
+import { createTask, updateTask, deleteTask, createSubtask, getSubTasks, getTasksSearch, updateVisibility } from '../model/tasksModel';
 import { CustomError } from '../utils/customError';
 
 
@@ -14,7 +14,8 @@ tasks.get('/fetch', async (c) => {
   const title = c.req.query('title') || ''; // 未指定でも安全なように空文字に
   const due_date = c.req.query('due_date') || ''; // 未指定でも安全なように空文字に
   const status = c.req.query('status') || ''; // 未指定でも安全なように空文字に
-  const tasks = await getTasksSearch(id, title, status, due_date);
+  const visibility = c.req.query('visibility') || ''; // 未指定でも安全なように空文字に
+  const tasks = await getTasksSearch(id, title, status, due_date, visibility);
   return c.json(tasks);
 });
 
@@ -30,6 +31,17 @@ tasks.put('/:id', async (c) => {
   const id = parseInt(c.req.param('id'));
   const body = await c.req.json();
   const task = await updateTask(id, body);
+  if (!task || task.length == 0) {
+    throw new CustomError("Task not found", 404);
+  }
+  return c.json(task[0]);
+});
+
+// タスクのアーカイブの変更処理
+tasks.put('/archive/:id', async (c) => {
+  const id = parseInt(c.req.param('id'));
+  const body = await c.req.json();
+  const task = await updateVisibility(id, body);
   if (!task || task.length == 0) {
     throw new CustomError("Task not found", 404);
   }

@@ -4,9 +4,8 @@ import SubTaskDetailBlock from "./SubTaskDetailBlock.tsx"; // 下で定義する
 import { Task, SubTask } from "../types.ts";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { UserFormInputs, SearchType } from "../types.ts";
-import TaskSearch from "../home/TaskSearch.tsx";
-import UpdateForm from "../components/update_Modal.tsx";
+import { UserFormInputs } from "../types.ts";
+// import TaskSearch from "../home/TaskSearch.tsx";
 import "react-datepicker/dist/react-datepicker.css";
 import CreateSubtaskModal from "./createSubtaskModal.tsx";
 import TaskModal from "../../components/TaskModal.tsx";

@@ -42,11 +42,11 @@ export interface DateForm {
   endDate: Date;
 }
 
-export interface SearchType {
-  keyword: string;
-  due_date: Date;
-  status: TaskStatus;
-}
+// export interface SearchType {
+//   keyword: string;
+//   due_date: Date;
+//   status: TaskStatus;
+// }
 
 
 

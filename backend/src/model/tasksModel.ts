@@ -7,6 +7,7 @@ type Task = {
     detail: string;
     due_date: string;
     status: string;
+    visibility: string;
     created_at: string; // ← JSONとして返すなら string にする
 };
 
@@ -15,7 +16,8 @@ export const getTasksSearch = async (
     rawid: string,
     title: string,
     status: string,
-    due_date: string
+    due_date: string,
+    visibility: string
 ) => {
     const conditions = [];
     const params = [];
@@ -46,6 +48,10 @@ export const getTasksSearch = async (
         } else {
             throw new Error(`Invalid due_date format: ${due_date}`);
         }
+    }
+    if (visibility) {
+        conditions.push(`visibility = $${params.length + 1}::"TaskVisibility"`);
+        params.push(visibility);
     }
     const whereClause =
         conditions.length > 0 ? "WHERE " + conditions.join(" AND ") : "";
@@ -81,6 +87,20 @@ export const updateTask = async (
             detail = ${body.detail},
             due_date = ${new Date(body.due_date)},
             status = ${body.status}::"TaskStatus"
+        WHERE id = ${id}
+        RETURNING *
+    `) as any[];
+    return task;
+};
+
+// [INFO]Taskのアーカイブの変更処理
+export const updateVisibility = async (
+    id: number,
+    body: { visibility: string }
+) => {
+    const task = (await prisma.$queryRaw`
+        UPDATE "Task"
+        SET visibility = ${body.visibility}::"TaskVisibility"
         WHERE id = ${id}
         RETURNING *
     `) as any[];

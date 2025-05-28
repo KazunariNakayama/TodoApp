@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import TaskList from './TaskList.tsx';
+import TaskList from './TaskArchiveList.tsx';
 import { Task } from '../types.ts';
 // import { UserFormInputs } from '../types.ts';
-import TaskSearch from './TaskSearch.tsx';
+import TaskSearch from './TaskArchiveSearch.tsx';
 import "react-datepicker/dist/react-datepicker.css"
 import TaskModal from '../../components/TaskModal.tsx';
 import useFetchTasks from '../huck/useTaskFetch.ts';
@@ -20,7 +20,7 @@ const App = () => {
   const { ftasks, floading, fetchTasks } = useFetchTasks();
 
   useEffect(() => {
-    fetchTasks({ visibility: 'ACTIVE' });
+    fetchTasks({});
   }, []);
 
   const options = [
@@ -40,39 +40,39 @@ const App = () => {
   // };
 
 
-  const handleDelete = async (id: string) => {
-    console.log('id:', id);
+  const handleDelete = async (params: string) => {
+    console.log('id:', params);
     setLoading(true);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks/archive/${id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ visibility: 'ARCHIVED' }),
-        }
+        `${process.env.REACT_APP_API_URL}/api/tasks/${params}}`, {
+        method: `DELETE`,
+      }
       );
 
       if (!response.ok) {
         window.alert('タスクの削除に失敗しました');
-        throw new Error('Failed to delete task');
+        throw new Error('Failed to Delete Task');
       }
 
-      // 最新タスクを再取得
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch`);
-      if (!res.ok) throw new Error('Failed to fetch tasks');
-      const data = await res.json();
-      setTasks(data);
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch`);
+        if (!response.ok) throw new Error('Failed to fetch tasks');
+        const data = await response.json();
+        setTasks(data);
+      } catch (err) {
+        console.error('Failed to fetch tasks:', err);
+      } finally {
+        setLoading(false);
+      }
+
 
     } catch (err) {
-      console.error('Failed to update visibility:', err);
+      console.error('Failed to fetch tasks:', err);
     } finally {
       setLoading(false);
     }
   };
-
 
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
