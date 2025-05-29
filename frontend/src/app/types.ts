@@ -19,34 +19,3 @@ export interface SubTask {
 
 
 export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
-
-export interface CreateTaskInput {
-  title: string;
-  description?: string;
-}
-
-export interface UpdateTaskInput {
-  title?: string;
-  description?: string;
-  status?: TaskStatus;
-}
-
-//↓これはいる？削除予定
-export interface UserFormInputs {
-  name: string;
-  email: string;
-}
-
-export interface DateForm {
-  startDate: Date;
-  endDate: Date;
-}
-
-// export interface SearchType {
-//   keyword: string;
-//   due_date: Date;
-//   status: TaskStatus;
-// }
-
-
-

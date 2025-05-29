@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import TaskList from './TaskList.tsx';
 import { Task } from '../types.ts';
-// import { UserFormInputs } from '../types.ts';
 import TaskSearch from './TaskSearch.tsx';
 import "react-datepicker/dist/react-datepicker.css"
 import TaskModal from '../../components/TaskModal.tsx';
@@ -14,32 +13,11 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   //検索関連の宣言
-  const [keyword, setKeyword] = useState('');
-  const initialDate = new Date();
-  const [due_date, setDue_date] = useState(initialDate);
-  const [status, setStatus] = useState<'TODO' | 'IN_PROGRESS' | 'DONE'>('TODO');
   const { ftasks, floading, fetchTasks } = useFetchTasks();
 
   useEffect(() => {
     fetchTasks({ visibility: 'ACTIVE' });
   }, []);
-
-  const options = [
-    { value: 'todo', label: '未完了' },
-    { value: 'in_progress', label: '進行中' },
-    { value: 'Done', label: '完了' },
-    { value: '', label: '選択を外す' }
-  ]
-
-  // const handleSearch = async (params: { keyword: string; due_date: string; status: string }) => {
-  //   console.log('検索条件:', params);
-  //   fetchTasks({
-  //     keyword: params.keyword,
-  //     due_date: params.due_date,
-  //     status: params.status,
-  //   });
-  // };
-
 
   const handleArchive = async (id: string) => {
     console.log('id:', id);
@@ -63,23 +41,12 @@ const App = () => {
 
       // 最新タスクを再取得
       await fetchTasks({ visibility: 'ACTIVE' });
-      // const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch?visibility=ACTIVE`);
-      // if (!res.ok) throw new Error('Failed to fetch tasks');
-      // const data = await res.json();
-      // setTasks(data);
-
     } catch (err) {
       console.error('Failed to update visibility:', err);
     } finally {
       setLoading(false);
     }
   };
-
-
-  const [showModal, setShowModal] = useState(false);
-  const ShowModal = () => {
-    setShowModal(true);
-  }
 
   const handleCreate = async (params: { title: string; detail: string; due_date: string; status: string }) => {
     console.log('params:', params);
@@ -99,8 +66,6 @@ const App = () => {
         window.alert("タスクの作成に失敗しました")
         throw new Error('Failed to Create Task');
       }
-      // const data = await response.json();
-      // setTasks(data); // ← これが App の状態を更新！
 
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch`);

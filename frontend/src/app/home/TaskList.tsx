@@ -5,14 +5,11 @@ import { Link } from "react-router-dom";
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
 
-
-
 type MyTableProps = {
     tasks: Task[];
     loading: boolean;
     onArchive: (id: string) => void;
 };
-
 
 const TaskList = ({ tasks, loading, onArchive }: MyTableProps) => {
     console.log("UpdateForm task: ", tasks);
@@ -22,20 +19,7 @@ const TaskList = ({ tasks, loading, onArchive }: MyTableProps) => {
         DONE: '完了',
     };
 
-    const handleDelete = (id) => {
-        // //const confirmed = window.confirm('本当に削除しますか？ この操作は取り消せません。');
-        // if (confirmed) {
-        //     onArchive(id)
-        //     console.log('削除されました');
-        // } else {
-        //     console.log('キャンセルされました');
-        // }
-        onArchive(id)
-        console.log('アーカイブされました');
-    };
-
     const columns = [
-
         {
             name: `タスク名`,
             selector: (row: Task) => row.title,

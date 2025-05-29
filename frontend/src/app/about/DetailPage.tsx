@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import TaskDetailBlock from "./TaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
 import SubTaskDetailBlock from "./SubTaskDetailBlock.tsx"; // 下で定義するテーブル表示コンポーネント
 import { Task, SubTask } from "../types.ts";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { UserFormInputs } from "../types.ts";
-// import TaskSearch from "../home/TaskSearch.tsx";
 import "react-datepicker/dist/react-datepicker.css";
 import CreateSubtaskModal from "./createSubtaskModal.tsx";
 import TaskModal from "../../components/TaskModal.tsx";
@@ -76,63 +74,12 @@ const App = () => {
     }
   };
 
-  const handleFormSubmit = (data: UserFormInputs) => {
-    // setLoading(true);
-    // try {
-    //   const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/search`);
-    //   if (!response.ok) throw new Error('Failed to fetch tasks');
-    //   const data = await response.json();
-    //   setTasks(data);
-    // } catch (err) {
-    //   console.error('Failed to fetch tasks:', err);
-    // } finally {
-    //   setLoading(false);
-    // //console.log('フォーム送信データ:', data);
-    // //alert(`送信成功：${data.name} `);
-    // // ここでAPIなどに送信してもOK
-  };
-
-  // const handleDueSubmit = (data) => {
-  //   console.log('期日送信データ:', data);
-  //   alert(`送信成功`);
-  // }
-
   const options = [
     { value: "todo", label: "未完了" },
     { value: "in_progress", label: "進行中" },
     { value: "Done", label: "完了" },
     { value: "", label: "選択を外す" },
   ];
-
-  // const handleSearch = async (params: {
-  //   keyword: string;
-  //   due_date: string;
-  //   status: string;
-  // }) => {
-  //   console.log("検索条件:", params);
-  //   setLoading(true);
-  //   try {
-  //     const query = new URLSearchParams({
-  //       title: params.keyword,
-  //       due_date: params.due_date,
-  //       status: params.status,
-  //     }).toString();
-
-  //     const response = await fetch(
-  //       `${process.env.REACT_APP_API_URL}/api/tasks/fetch?${query}`
-  //     );
-
-  //     if (!response.ok) throw new Error("Failed to fetch tasks");
-  //     const data = await response.json();
-  //     setTasks(data); // ← これが App の状態を更新！
-  //   } catch (err) {
-  //     console.error("Failed to fetch tasks:", err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // <TaskSearch onSearch={handleSearch} />;
 
   const handleDelete = async (params: string) => {
     console.log("id:", params);

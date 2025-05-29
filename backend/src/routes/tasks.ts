@@ -28,7 +28,7 @@ tasks.post('/', async (c) => {
 
 // タスクの更新
 tasks.put('/:id', async (c) => {
-  const id = parseInt(c.req.param('id'));
+  const id = c.req.param('id');
   const body = await c.req.json();
   const task = await updateTask(id, body);
   if (!task || task.length == 0) {
@@ -39,7 +39,7 @@ tasks.put('/:id', async (c) => {
 
 // タスクのアーカイブの変更処理
 tasks.put('/archive/:id', async (c) => {
-  const id = parseInt(c.req.param('id'));
+  const id = c.req.param('id');
   const body = await c.req.json();
   const task = await updateVisibility(id, body);
   if (!task || task.length == 0) {
@@ -50,7 +50,7 @@ tasks.put('/archive/:id', async (c) => {
 
 // タスクの削除
 tasks.delete('/:id', async (c) => {
-  const id = parseInt(c.req.param('id'));
+  const id = c.req.param('id');
   const tasks = await getTasksSearch(id, '', '', '', 'ARCHIVED');
   if (!tasks || tasks.length === 0) {
     throw new CustomError("Only archived tasks can be deleted or task not found", 400);
@@ -64,21 +64,21 @@ tasks.delete('/:id', async (c) => {
 
 //NOTE:指定タスクのサブタスクの取得
 tasks.get('/subtask/:id', async (c) => {
-  const id = parseInt(c.req.param('id') || '');
+  const id = c.req.param('id') || '';
   const subtasks = await getSubTasks(id);
   return c.json(subtasks);
 });
 
 // サブタスクの一覧取得
 tasks.get('/subtasks/:id', async (c) => {
-  const taskId = parseInt(c.req.param('id'));
+  const taskId = c.req.param('id');
   const subtasks = await getSubTasks(taskId);
   return c.json(subtasks);
 });
 
 // サブタスクの作成
 tasks.post('/subtasks/:id', async (c) => {
-  const taskId = parseInt(c.req.param('id'));
+  const taskId = c.req.param('id');
   const body = await c.req.json();
   const subtask = await createSubtask(taskId, body);
   return c.json(subtask);

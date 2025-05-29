@@ -2,7 +2,6 @@ import Select from 'react-select'
 import React, { useState } from 'react';
 import DatePicker from "react-datepicker";
 import { Button } from '@mui/material';
-// import { useForm } from 'react-hook-form';
 import { ja } from 'date-fns/locale';
 
 type TaskSearchProps = {
@@ -20,14 +19,6 @@ const TaskSearch = ({ fetchTasks }: TaskSearchProps) => {
     const [due_date, setDue_date] = useState(initialDate);
     const [status, setStatus] = useState('');
     const [visibility, setVisibility] = useState('ACTIVE');
-
-    // const { ftasks, floading, fetchTasks } = useFetchTasks();
-
-
-    // useEffect(() => {
-    //     console.log('fetchTasks type:', typeof fetchTasks); // ← function でなければNG
-    // }, [fetchTasks]);
-
     const handlekeyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setKeyword(event.target.value);
     };
@@ -35,7 +26,6 @@ const TaskSearch = ({ fetchTasks }: TaskSearchProps) => {
         if (!due_date) return;
         setDue_date(due_date);
     };
-
     const handlestatusChange = (selected: { value: string; label: string } | null) => {
         if (!selected) {
             setStatus(''); // 非選択時の挙動（必要に応じて調整）
@@ -43,7 +33,6 @@ const TaskSearch = ({ fetchTasks }: TaskSearchProps) => {
         }
         setStatus(selected.value.toUpperCase() as 'TODO' | 'IN_PROGRESS' | 'DONE');
     };
-
     const options = [
         { value: 'todo', label: '未完了' },
         { value: 'in_progress', label: '進行中' },
@@ -113,7 +102,6 @@ const TaskSearch = ({ fetchTasks }: TaskSearchProps) => {
                 >検索</Button>
             </form>
         </div>
-
     );
 }
 

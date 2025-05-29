@@ -12,54 +12,6 @@ type Task = {
 };
 
 // [INFO]タスクを取得・検索する
-// export const getTasksSearch = async (
-//     rawid: string,
-//     title: string,
-//     status: string,
-//     due_date: string,
-//     visibility: string
-// ) => {
-//     const conditions = [];
-//     const params = [];
-//     const id = rawid ? parseInt(rawid, 10) : undefined;
-//     if (id) {
-//         conditions.push(`id = $${params.length + 1}`);
-//         params.push(id);
-//     }
-//     if (title) {
-//         conditions.push(
-//             `(title LIKE $${params.length + 1} OR detail LIKE $${params.length + 1})`
-//         );
-//         params.push(`%${title}%`);
-//     }
-//     if (status) {
-//         conditions.push(`status = $${params.length + 1}::"TaskStatus"`);
-//         params.push(status);
-//     }
-//     if (due_date) {
-//         const parsed = new Date(due_date);
-//         if (!isNaN(parsed.getTime())) {
-//             const endDate = new Date(parsed);
-//             endDate.setDate(endDate.getDate() + 1);
-//             endDate.setHours(0, 0, 0, 0);
-
-//             conditions.push(`due_date < $${params.length + 1}::timestamp`);
-//             params.push(endDate.toISOString());
-//         } else {
-//             throw new Error(`Invalid due_date format: ${due_date}`);
-//         }
-//     }
-//     if (visibility) {
-//         conditions.push(`visibility = $${params.length + 1}::"TaskVisibility"`);
-//         params.push(visibility);
-//     }
-//     const whereClause =
-//         conditions.length > 0 ? "WHERE " + conditions.join(" AND ") : "";
-//     const query = `SELECT * FROM "Task" ${whereClause};`;
-//     const tasks = (await prisma.$queryRawUnsafe(query, ...params)) as any[];
-//     return tasks;
-// };
-
 export const getTasksSearch = async (
     rawid: string,
     title: string,
@@ -67,22 +19,21 @@ export const getTasksSearch = async (
     due_date: string,
     visibility: string
 ) => {
-    const conditions = [];
-    const params = [];
     const id = rawid ? parseInt(rawid, 10) : undefined;
+
+    const where: any = {};
+
     if (id) {
-        conditions.push(`id = $${params.length + 1}`);
-        params.push(id);
+        where.id = id;
     }
     if (title) {
-        conditions.push(
-            `(title LIKE $${params.length + 1} OR detail LIKE $${params.length + 1})`
-        );
-        params.push(`%${title}%`);
+        where.OR = [
+            { title: { contains: title } },
+            { detail: { contains: title } }
+        ];
     }
     if (status) {
-        conditions.push(`status = $${params.length + 1}::"TaskStatus"`);
-        params.push(status);
+        where.status = status;
     }
     if (due_date) {
         const parsed = new Date(due_date);
@@ -90,21 +41,22 @@ export const getTasksSearch = async (
             const endDate = new Date(parsed);
             endDate.setDate(endDate.getDate() + 1);
             endDate.setHours(0, 0, 0, 0);
-
-            conditions.push(`due_date < $${params.length + 1}::timestamp`);
-            params.push(endDate.toISOString());
+            where.due_date = { lt: endDate };
         } else {
             throw new Error(`Invalid due_date format: ${due_date}`);
         }
     }
     if (visibility) {
-        conditions.push(`visibility = $${params.length + 1}::"TaskVisibility"`);
-        params.push(visibility);
+        where.visibility = visibility;
     }
-    const whereClause =
-        conditions.length > 0 ? "WHERE " + conditions.join(" AND ") : "";
-    const query = `SELECT * FROM "Task" ${whereClause};`;
-    const tasks = (await prisma.$queryRawUnsafe(query, ...params)) as any[];
+
+    const tasks = await prisma.task.findMany({
+        where,
+        include: {
+            subtasks: true
+        }
+    });
+
     return tasks;
 };
 
@@ -126,7 +78,7 @@ export const createTask = async (body: {
 
 // [INFO]Taskの更新
 export const updateTask = async (
-    id: number,
+    id: string,
     body: { title: string; detail: string; due_date: string; status: string }
 ) => {
     const task = (await prisma.$queryRaw`
@@ -135,7 +87,7 @@ export const updateTask = async (
             detail = ${body.detail},
             due_date = ${new Date(body.due_date)},
             status = ${body.status}::"TaskStatus"
-        WHERE id = ${id}
+        WHERE id = ${parseInt(id)}
         RETURNING *
     `) as any[];
     return task;
@@ -143,32 +95,39 @@ export const updateTask = async (
 
 // [INFO]Taskのアーカイブの変更処理
 export const updateVisibility = async (
-    id: number,
+    id: string,
     body: { visibility: string }
 ) => {
     const task = (await prisma.$queryRaw`
         UPDATE "Task"
         SET visibility = ${body.visibility}::"TaskVisibility"
-        WHERE id = ${id}
+        WHERE id = ${parseInt(id)}
         RETURNING *
     `) as any[];
     return task;
 };
 
 // [INFO]Taskの削除
-export const deleteTask = async (id: number) => {
+export const deleteTask = async (id: string) => {
+    // まずサブタスクを削除
+    await prisma.$queryRaw`
+        DELETE FROM "Subtask"
+        WHERE "taskId" = ${parseInt(id)}
+    `;
+
+    // 次にタスクを削除
     const result = (await prisma.$queryRaw`
-            DELETE FROM "Task"
-            WHERE id = ${id}
-            RETURNING id
-        `) as any[];
+        DELETE FROM "Task"
+        WHERE id = ${parseInt(id)}
+        RETURNING id
+    `) as any[];
     return result;
 };
 
 // [INFO]subtask取得
-export const getSubTasks = async (id: number) => {
+export const getSubTasks = async (id: string) => {
     const subtasks =
-        (await prisma.$queryRaw`SELECT * FROM "Subtask" WHERE "taskId" = ${id}`) as any[];
+        (await prisma.$queryRaw`SELECT * FROM "Subtask" WHERE "taskId" = ${parseInt(id)}`) as any[];
     if (subtasks.length === 0) {
         throw new CustomError("SUbTask not found", 404);
     }
@@ -176,13 +135,13 @@ export const getSubTasks = async (id: number) => {
 };
 
 export const createSubtask = async (
-    taskId: number,
+    taskId: string,
     body: { title: string; detail: string; status?: string }
 ) => {
     const subtask = (await prisma.$queryRaw`
             INSERT INTO "Subtask" (title, detail, status, "taskId", created_at)
             VALUES (${body.title}, ${body.detail}, (${body.status || "TODO"
-        })::"TaskStatus", ${taskId}, NOW())
+        })::"TaskStatus", ${parseInt(taskId)}, NOW())
             RETURNING *
         `) as any[];
     return subtask[0];

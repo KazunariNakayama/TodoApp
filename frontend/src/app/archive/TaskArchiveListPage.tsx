@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react';
 import TaskList from './TaskArchiveList.tsx';
 import { Task } from '../types.ts';
-// import { UserFormInputs } from '../types.ts';
-import TaskSearch from './TaskArchiveSearch.tsx';
+import TaskArchiveSearch from './TaskArchiveSearch.tsx';
 import "react-datepicker/dist/react-datepicker.css"
-import TaskModal from '../../components/TaskModal.tsx';
 import useFetchTasks from '../huck/useTaskFetch.ts';
-
 import { useNavigate } from "react-router-dom";
 
 
@@ -15,32 +12,11 @@ const TaskArchiveList = () => {
   const [loading, setLoading] = useState(true);
 
   //検索関連の宣言
-  const [keyword, setKeyword] = useState('');
-  const initialDate = new Date();
-  const [due_date, setDue_date] = useState(initialDate);
-  const [status, setStatus] = useState<'TODO' | 'IN_PROGRESS' | 'DONE'>('TODO');
   const { ftasks, floading, fetchTasks } = useFetchTasks();
 
   useEffect(() => {
     fetchTasks({ visibility: 'ARCHIVED' });
   }, []);
-
-  const options = [
-    { value: 'todo', label: '未完了' },
-    { value: 'in_progress', label: '進行中' },
-    { value: 'Done', label: '完了' },
-    { value: '', label: '選択を外す' }
-  ]
-
-  // const handleSearch = async (params: { keyword: string; due_date: string; status: string }) => {
-  //   console.log('検索条件:', params);
-  //   fetchTasks({
-  //     keyword: params.keyword,
-  //     due_date: params.due_date,
-  //     status: params.status,
-  //   });
-  // };
-
 
   const handleActive = async (id: string) => {
     console.log('id:', id);
@@ -61,14 +37,8 @@ const TaskArchiveList = () => {
         window.alert('タスクの削除に失敗しました');
         throw new Error('Failed to delete task');
       }
-
       // 最新タスクを再取得
       await fetchTasks({ visibility: 'ARCHIVED' });
-      // const res = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch?visibility=ACTIVE`);
-      // if (!res.ok) throw new Error('Failed to fetch tasks');
-      // const data = await res.json();
-      // setTasks(data);
-
     } catch (err) {
       console.error('Failed to update visibility:', err);
     } finally {
@@ -86,16 +56,12 @@ const TaskArchiveList = () => {
         method: `DELETE`,
       }
       );
-
       if (!response.ok) {
         window.alert('タスクの削除に失敗しました');
         throw new Error('Failed to Delete Task');
       }
-
       // 最新タスクを再取得
       await fetchTasks({ visibility: 'ARCHIVED' });
-
-
     } catch (err) {
       console.error('Failed to fetch tasks:', err);
     } finally {
@@ -103,51 +69,6 @@ const TaskArchiveList = () => {
     }
   };
 
-  const [showModal, setShowModal] = useState(false);
-  const ShowModal = () => {
-    setShowModal(true);
-  }
-
-  const handleCreate = async (params: { title: string; detail: string; due_date: string; status: string }) => {
-    console.log('params:', params);
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/tasks`, {
-        method: `POST`,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(params)
-      }
-      );
-
-      if (!response.ok) {
-        window.alert("タスクの作成に失敗しました")
-        throw new Error('Failed to Create Task');
-      }
-      // const data = await response.json();
-      // setTasks(data); // ← これが App の状態を更新！
-
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch`);
-        if (!response.ok) throw new Error('Failed to fetch tasks');
-        const data = await response.json();
-        setTasks(data);
-      } catch (err) {
-        console.error('Failed to fetch tasks:', err);
-      } finally {
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error('Failed to fetch tasks:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // モーダルの開閉状態を親コンポーネントのstateで管理
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   const navigate = useNavigate();
@@ -168,7 +89,7 @@ const TaskArchiveList = () => {
 
       </div>
       <div className='ml-2'>
-        <TaskSearch fetchTasks={fetchTasks} />
+        <TaskArchiveSearch fetchTasks={fetchTasks} />
       </div>
       <TaskList tasks={ftasks ?? []} loading={floading} onActive={handleActive} onDelete={handleDelete} />
 

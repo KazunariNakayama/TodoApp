@@ -1,8 +1,5 @@
-// import React, { useState, useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { SubTask } from '../types';
-// import { format } from 'date-fns';
-// import { ja } from 'date-fns/locale';
 
 type MyTableProps = {
     subtasks: SubTask[];
