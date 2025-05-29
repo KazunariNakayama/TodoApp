@@ -51,7 +51,7 @@ const TaskModal = ({ task, modalbool, setModalbool, onCreate }: Props) => {
             setDue_date(task[0].due_date && !isNaN(Date.parse(task[0].due_date))
                 ? new Date(task[0].due_date)
                 : new Date());
-            setStatus(task[0].status ?? 'TODO');
+            setStatus(task[0].status ?? '');
         }
     }, []);
 
@@ -65,15 +65,13 @@ const TaskModal = ({ task, modalbool, setModalbool, onCreate }: Props) => {
 
     const validate = () => {
         const newErrors: typeof errors = {};
-
         if (touched.title) {
-            if (!title.trim()) {
+            if (!title.trim() || title === "") {
                 newErrors.title = "タスク名を入力してください";
             } else if (title.length > MAX_TITLE) {
                 newErrors.title = `タスク名は${MAX_TITLE}文字以内で入力してください`;
             }
         }
-
         if (touched.detail) {
             if (!detail.trim()) {
                 newErrors.detail = "内容を入力してください";
@@ -81,9 +79,8 @@ const TaskModal = ({ task, modalbool, setModalbool, onCreate }: Props) => {
                 newErrors.detail = `内容は${MAX_DETAIL}文字以内で入力してください`;
             }
         }
-
         // 期日とステータスのバリデーションは常時適用（既存通り）
-        if (!due_date || isNaN(new Date(due_date).getTime())) {
+        if (!due_date || isNaN(new Date(due_date).getTime()) || due_date < today) {
             newErrors.due_date = "本日以降の有効な期限を選択してください";
         }
         if (!STATUS_OPTIONS.includes(status)) {
@@ -131,7 +128,7 @@ const TaskModal = ({ task, modalbool, setModalbool, onCreate }: Props) => {
     const options = [
         { value: 'todo', label: '未完了' },
         { value: 'in_progress', label: '進行中' },
-        { value: 'Done', label: '完了' },
+        { value: 'done', label: '完了' },
     ]
 
     const filteredOptions = options.find((opt) => opt.value === status.toLowerCase())

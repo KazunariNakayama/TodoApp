@@ -100,15 +100,7 @@ const TaskDetailBlock = ({ tasks, loading, onDelete }: MyTableProps) => {
 
 
         </div>
-        // <DataTable
-        //     title="タスク詳細"
-        //     columns={columns}
-        //     data={tasks}
-        //     progressPending={loading}
-        //     pagination
-        //     highlightOnHover
-        //     striped
-        // />
+
     );
 };
 

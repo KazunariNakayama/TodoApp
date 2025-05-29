@@ -9,7 +9,6 @@ const tasks = new Hono();
 
 // // タスク一覧をsearchで取得
 tasks.get('/fetch', async (c) => {
-
   const id = c.req.query('id') || ''; // 未指定でも安全なように空文字に
   const title = c.req.query('title') || ''; // 未指定でも安全なように空文字に
   const due_date = c.req.query('due_date') || ''; // 未指定でも安全なように空文字に
@@ -22,6 +21,12 @@ tasks.get('/fetch', async (c) => {
 // タスクの作成
 tasks.post('/', async (c) => {
   const body = await c.req.json();
+  if (body.title == "") {
+    throw new CustomError("Task title is not written", 500);
+  }
+  else if (body.detail == "") {
+    throw new CustomError("Task detail is not written", 500);
+  }
   const task = await createTask(body);
   return c.json(task);
 });

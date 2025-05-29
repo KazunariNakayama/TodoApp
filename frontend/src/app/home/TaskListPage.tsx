@@ -7,6 +7,16 @@ import TaskModal from '../../components/TaskModal.tsx';
 import useFetchTasks from '../huck/useTaskFetch.ts';
 import { useNavigate } from "react-router-dom";
 
+//[INFO]DB接続がない場合に、TaskList.tsxへのftasksがobject型で渡ってしまうのを防ぐ
+function isTaskArray(data: unknown): data is Task[] {
+  console.log("isTaskArray:", data);
+  if (!Array.isArray(data)) return false;
+  const item = data[0];
+  return (
+    item != 'object'
+  );
+}
+
 
 const App = () => {
   const [tasks, setTasks] = useState<Task[]>();
@@ -15,8 +25,10 @@ const App = () => {
   //検索関連の宣言
   const { ftasks, floading, fetchTasks } = useFetchTasks();
 
+
   useEffect(() => {
     fetchTasks({ visibility: 'ACTIVE' });
+    console.log("ftasksみたーい：", ftasks);
   }, []);
 
   const handleArchive = async (id: string) => {
@@ -115,7 +127,8 @@ const App = () => {
       <div className='ml-2'>
         <TaskSearch fetchTasks={fetchTasks} />
       </div>
-      <TaskList tasks={ftasks ?? []} loading={floading} onArchive={handleArchive} />
+
+      <TaskList tasks={isTaskArray(ftasks) ? ftasks : []} loading={floading} onArchive={handleArchive} />
 
       <div className="App">
 

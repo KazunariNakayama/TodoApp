@@ -192,7 +192,7 @@ const App = () => {
         }
       );
       // うまく行きそうにないなら、reloadで対応予定
-      //window.location.reload();
+      window.location.reload();
 
       if (!response.ok) {
         window.alert("サブタスクの作成に失敗しました")

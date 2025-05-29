@@ -23,7 +23,7 @@ const TaskArchiveSearch = ({ fetchTasks }: TaskSearchProps) => {
         setKeyword(event.target.value);
     };
     const handledateChange = (due_date: Date | null) => {
-        if (!due_date) return;
+        // if (!due_date) return;
         setDue_date(due_date);
     };
     const handlestatusChange = (selected: { value: string; label: string } | null) => {
@@ -36,7 +36,8 @@ const TaskArchiveSearch = ({ fetchTasks }: TaskSearchProps) => {
     const options = [
         { value: 'todo', label: '未完了' },
         { value: 'in_progress', label: '進行中' },
-        { value: 'Done', label: '完了' }
+        { value: 'Done', label: '完了' },
+        { value: '', label: '絞り込みなし' }
     ]
 
     const filteredOptions = options.find((opt) => opt.value === status.toLowerCase())
@@ -66,6 +67,7 @@ const TaskArchiveSearch = ({ fetchTasks }: TaskSearchProps) => {
                     onChange={handledateChange}
                     locale={ja}
                     shouldCloseOnSelect={true}
+                    isClearable
                     className="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                     placeholderText="日付を選択"
                     dateFormat="yyyy/MM/dd"
