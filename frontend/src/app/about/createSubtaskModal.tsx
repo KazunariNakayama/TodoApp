@@ -26,7 +26,7 @@ const CreateSubtaskModal: React.FC<Props> = ({
     const [detail, setDetail] = useState('');
     const initialDate = new Date();
     const [due_date, setDue_date] = useState(initialDate);
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState("TODO");
 
     const [errors, setError] = useState<{
         title?: string;
@@ -34,6 +34,12 @@ const CreateSubtaskModal: React.FC<Props> = ({
         due_date?: string;
         status?: string;
     }>({});
+
+
+    const [touched, setTouched] = useState({
+        title: false,
+        detail: false,
+    });
 
     useEffect(() => {
         validate();
@@ -44,28 +50,33 @@ const CreateSubtaskModal: React.FC<Props> = ({
 
     const validate = () => {
         const newErrors: typeof errors = {};
-
-        if (!title.trim()) {
-            newErrors.title = "タスク名を入力してください";
-        } else if (title.length > MAX_TITLE) {
-            newErrors.title = `タスク名は${MAX_TITLE}文字以内で入力してください`;
+        if (touched.title) {
+            if (!title.trim() || title === "") {
+                newErrors.title = "タスク名を入力してください";
+            } else if (title.length > MAX_TITLE) {
+                newErrors.title = `タスク名は${MAX_TITLE}文字以内で入力してください`;
+            }
         }
-        if (!detail.trim()) {
-            newErrors.detail = "タスク名を入力してください";
-        } else if (detail.length > MAX_DETAIL) {
-            newErrors.detail = `タスク名は${MAX_DETAIL}文字以内で入力してください`;
-        }
-        if (!due_date || isNaN(new Date(due_date).getTime()) || due_date < today) {
-            newErrors.due_date = "有効な期限を選択してください";
+        if (touched.detail) {
+            if (!detail.trim()) {
+                newErrors.detail = "内容を入力してください";
+            } else if (detail.length > MAX_DETAIL) {
+                newErrors.detail = `内容は${MAX_DETAIL}文字以内で入力してください`;
+            }
         }
         if (!STATUS_OPTIONS.includes(status)) {
             newErrors.status = "有効なステータスを選択してください";
         }
 
         setError(newErrors);
-    }
+    };
 
-    const isValid = Object.keys(errors).length == 0;
+
+    const isValid =
+        title.trim() !== '' &&
+        detail.trim() !== '' &&
+        Object.keys(errors).length === 0;
+
 
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -81,43 +92,34 @@ const CreateSubtaskModal: React.FC<Props> = ({
     }
 
     const handletitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        //if (!event.target.value) return;
         setTitle(event.target.value);
+        if (!touched.title) setTouched(prev => ({ ...prev, title: true }));
     };
-    const handledetailChange = (
-        event: React.ChangeEvent<HTMLTextAreaElement>
-    ) => {
-        //if (!event.target.value) return;
+
+    const handledetailChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setDetail(event.target.value);
+        if (!touched.detail) setTouched(prev => ({ ...prev, detail: true }));
     };
+
     const handledateChange = (due_date: Date | null) => {
-        //if (!due_date) return;
         setDue_date(due_date);
     };
-    const handlestatusChange = (
-        selected: { value: string; label: string } | null
-    ) => {
+    const handlestatusChange = (selected: { value: string; label: string } | null) => {
         if (!selected) {
-            setStatus(""); // 非選択時の挙動（必要に応じて調整）
+            setStatus(''); // 非選択時の挙動（必要に応じて調整）
             return;
         }
-        setStatus(selected.value.toUpperCase() as "TODO" | "IN_PROGRESS" | "DONE");
+        setStatus(selected.value.toUpperCase() as 'TODO' | 'IN_PROGRESS' | 'DONE');
     };
 
     const options = [
-        { value: "todo", label: "未完了" },
-        { value: "in_progress", label: "進行中" },
-        { value: "Done", label: "完了" },
-    ];
+        { value: 'todo', label: '未完了' },
+        { value: 'in_progress', label: '進行中' },
+        { value: 'done', label: '完了' },
+    ]
 
-    const filteredOptions = options.find(
-        (opt) => opt.value === status.toLowerCase()
-    );
+    const filteredOptions = options.find((opt) => opt.value === status.toLowerCase())
 
-    // const handleSubmit = () => {
-    //     onCreate({ title, detail, due_date, status });
-    //     //ここにuseStateを使って、入力値を破棄する処理を入れる？
-    // };
 
     const closeModal = () => {
         setModalbool(false);
@@ -133,20 +135,21 @@ const CreateSubtaskModal: React.FC<Props> = ({
         </p>
     );
 
+
     return (
         <div
             className="flex justify-center items-center overflow-auto fixed inset-0 m-auto bg-black1 bg-opacity-20 backdrop-blur-md z-20"
             onClick={closeModal}
         >
             <div
-                className="bg-white h-[30rem] w-[35rem] rounded-2xl shadow-2xl"
+                className="bg-white h-[36.5rem] w-[35rem] rounded-2xl shadow-2xl"
                 //NOTE:コンポーネントの外側をクリックしたときにモーダルを閉じることができるように
                 //NOTE:これは内側をクリックしてもモーダルが閉じないようにするための処理
                 onClick={(e) => e.stopPropagation()}
             >
                 <form className='flex flex-col gap-3 p-5' /*style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}*/>
                     <div className='flex flex-row'>
-                        <h2 className='text-3xl font-semibold text-gray-800'>新規タスク作成</h2>
+                        <h2 className='text-3xl font-semibold text-gray-800'>タスク編集</h2>
                         <button className="ml-auto"
                             onClick={closeModal}
                         >
@@ -154,10 +157,11 @@ const CreateSubtaskModal: React.FC<Props> = ({
                         </button>
                     </div>
                     <label className="flex flex-col">
-                        <span className="mb-1 text-sm font-medium text-gray-700">サブタスク名(20文字まで)</span>
+                        <span className="mb-1 text-sm font-medium text-gray-700">タスク名(20文字まで)</span>
                         <input type="text" value={title} onChange={handletitleChange}
                             className={`p-2 border border-gray-300 rounded-md ${errors.title ? "border-red-500" : "border-gray-300"}`} />
                         <FieldError message={errors.title} />
+
                     </label>
                     <label className='flex flex-col'>
                         <span className="mb-1 text-sm font-medium text-gray-700">内容(255文字まで)</span>
@@ -191,7 +195,7 @@ const CreateSubtaskModal: React.FC<Props> = ({
                             className={`mr-5 bg-black3 w-20 py-1 ${isValid ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-400 cursor-not-allowed"
                                 }`}
                             variant="contained" color="primary"
-                        >作成</Button>
+                        >完了</Button>
                     </div>
                 </form>
             </div>

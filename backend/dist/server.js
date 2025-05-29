@@ -1,8 +1,8 @@
 // src/server.ts
 import { Hono } from 'hono';
-import tasks from './routes/tasks';
+import tasks from './src/routes/tasks';
 import { cors } from 'hono/cors';
-import { handleError } from './utils/errorHandler';
+import { handleError } from './src/utils/errorHandler';
 const app = new Hono();
 // CORS対応
 app.use('*', cors());
@@ -12,5 +12,4 @@ app.onError((err, c) => {
 });
 // APIルーティング
 app.route('/api/tasks', tasks);
-// app.route('/api/subtasks', subtasks); // 追加予定があれば
 export default app;
