@@ -30,7 +30,7 @@ TodoApp/
 ## Prerequisites
 
 - Node.js (v18 or higher)
-- npm or yarn
+- pnpm
 - PostgreSQL
 
 ## Setup Instructions
@@ -42,35 +42,53 @@ git clone <repository-url>
 cd TodoApp
 ```
 
-### 2. Backend Setup
+### 2. Install Dependencies
+
+```bash
+# Install root dependencies
+pnpm install
+
+# Install backend dependencies
+cd backend
+pnpm install
+
+# Install frontend dependencies
+cd ../frontend
+pnpm install
+```
+
+### 3. Backend Setup
 
 ```bash
 cd backend
 
-# Install dependencies
-npm install
-
 # Set up environment variables
-cp .env.example .env
+#cp .env.example .env
+touch .env
 # Edit .env with your database credentials
 
 # Set up the database
-npx prisma migrate dev
+pnpm prisma migrate dev
 
 # Start the development server
-npm run dev
+pnpm dev
 ```
 
-### 3. Frontend Setup
+### 4. Frontend Setup
 
 ```bash
 cd frontend
 
-# Install dependencies
-npm install
+# Set up environment variables
+touch .env
+# Add the following to .env:
+# REACT_APP_API_URL=http://localhost:3000
+
+# Build the frontend
+pnpm run build
 
 # Start the development server
-npm run dev
+pnpm dev
 ```
 
 ## Development
@@ -91,19 +109,19 @@ npm run dev
 
 ### Backend
 
-- `npm run dev`: Start development server
-- `npm run build`: Build for production
-- `npm start`: Start production server
-- `npm run lint`: Run ESLint
-- `npm run test`: Run tests
+- `pnpm dev`: Start development server
+- `pnpm build`: Build for production
+- `pnpm start`: Start production server
+- `pnpm lint`: Run ESLint
+- `pnpm test`: Run tests
 
 ### Frontend
 
-- `npm run dev`: Start development server
-- `npm run build`: Build for production
-- `npm run preview`: Preview production build
-- `npm run lint`: Run ESLint
-- `npm run test`: Run tests
+- `pnpm dev`: Start development server
+- `pnpm build`: Build for production
+- `pnpm preview`: Preview production build
+- `pnpm lint`: Run ESLint
+- `pnpm test`: Run tests
 
 ## Environment Variables
 
@@ -118,7 +136,7 @@ PORT=3000
 ### Frontend (.env)
 
 ```env
-VITE_API_URL="http://localhost:3000"
+REACT_APP_API_URL="http://localhost:3000"
 ```
 
 ## Contributing
