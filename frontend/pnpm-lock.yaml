@@ -38,6 +38,9 @@ importers:
       '@types/styled-components':
         specifier: ^5.1.34
         version: 5.1.34
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       form:
         specifier: ^0.2.5
         version: 0.2.5
