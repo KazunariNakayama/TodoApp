@@ -21,15 +21,11 @@ export const useFetchTasks = () => {
             status: params.status ?? '',
             visibility: params.visibility ?? '',
         }).toString();
-        console.log('fetchTasks called with params:', params);
-        console.log('taskFetch: query =', query);
-        console.log('fetch', query);
 
 
         setFLoading(true);
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch?${query}`);
         const data = await response.json();
-        console.log('fetch', data);
         setTasks(data);
         setFLoading(false);
     };

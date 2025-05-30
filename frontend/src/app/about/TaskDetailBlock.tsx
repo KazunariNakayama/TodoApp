@@ -11,7 +11,6 @@ type MyTableProps = {
 };
 
 const TaskDetailBlock = ({ tasks, loading, onDelete }: MyTableProps) => {
-    console.log("UpdateForm task: ", tasks);
     const options = [
         { value: 'todo', label: '未完了' },
         { value: 'in_progress', label: '進行中' },
@@ -57,7 +56,6 @@ const TaskDetailBlock = ({ tasks, loading, onDelete }: MyTableProps) => {
                     color="secondary"
                     value={row.id}
                     onClick={() => {
-                        console.log("削除ボタンon");
                         onDelete(row.id);
                     }}
                 >

@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 
 //[INFO]DB接続がない場合に、TaskList.tsxへのftasksがobject型で渡ってしまうのを防ぐ
 function isTaskArray(data: unknown): data is Task[] {
-  console.log("isTaskArray:", data);
   if (!Array.isArray(data)) return false;
   const item = data[0];
   return (
@@ -28,11 +27,9 @@ const App = () => {
 
   useEffect(() => {
     fetchTasks({ visibility: 'ACTIVE' });
-    console.log("ftasksみたーい：", ftasks);
   }, []);
 
   const handleArchive = async (id: string) => {
-    console.log('id:', id);
     setLoading(true);
     try {
       const response = await fetch(
@@ -61,7 +58,6 @@ const App = () => {
   };
 
   const handleCreate = async (params: { title: string; detail: string; due_date: string; status: string }) => {
-    console.log('params:', params);
     setLoading(true);
     try {
       const response = await fetch(

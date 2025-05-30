@@ -12,7 +12,6 @@ type MyTableProps = {
 };
 
 const TaskList = ({ tasks, loading, onArchive }: MyTableProps) => {
-    console.log("UpdateForm task: ", tasks);
     const statusLabelMap: Record<string, string> = {
         TODO: '未完了',
         IN_PROGRESS: '進行中',

@@ -17,7 +17,6 @@ const TaskArchiveList = () => {
   }, []);
 
   const handleActive = async (id: string) => {
-    console.log('id:', id);
     setLoading(true);
     try {
       const response = await fetch(
@@ -46,7 +45,6 @@ const TaskArchiveList = () => {
 
 
   const handleDelete = async (params: string) => {
-    console.log('id:', params);
     setLoading(true);
     try {
       const response = await fetch(

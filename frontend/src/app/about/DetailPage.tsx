@@ -20,10 +20,7 @@ const App = () => {
   const [due_date, setDue_date] = useState(initialDate);
   const [status, setStatus] = useState<"TODO" | "IN_PROGRESS" | "DONE">("TODO");
   const { id } = useParams();
-
-  console.log("取得したID", id);
   const navigate = useNavigate();
-
   const handleBack = () => {
     navigate("/");
   };
@@ -41,7 +38,6 @@ const App = () => {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/api/tasks/fetch?id=${id}`
       );
-      console.log("検索ID", id);
       const data = await response.json();
 
       if (!response.ok || data.length === 0) {
@@ -63,7 +59,6 @@ const App = () => {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/api/tasks/subtask/${id}`
       );
-      console.log("検索ID", id);
       if (!response.ok) throw new Error("Failed to fetch subtasks");
       const subtaskdata = await response.json();
       setSubTasks(subtaskdata);
@@ -126,7 +121,6 @@ const App = () => {
     due_date: string;
     status: string;
   }) => {
-    console.log("params:", params);
     setLoading(true);
     try {
       const response = await fetch(
@@ -168,7 +162,6 @@ const App = () => {
     detail: string;
     status: string;
   }) => {
-    console.log("params:", params);
     setLoading(true);
     try {
       const response = await fetch(
