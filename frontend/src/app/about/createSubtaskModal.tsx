@@ -96,9 +96,7 @@ const CreateSubtaskModal: React.FC<Props> = ({
         if (!touched.detail) setTouched(prev => ({ ...prev, detail: true }));
     };
 
-    const handledateChange = (due_date: Date | null) => {
-        setDue_date(due_date);
-    };
+
     const handlestatusChange = (selected: { value: string; label: string } | null) => {
         if (!selected) {
             setStatus(''); // 非選択時の挙動（必要に応じて調整）
@@ -137,12 +135,12 @@ const CreateSubtaskModal: React.FC<Props> = ({
             onClick={closeModal}
         >
             <div
-                className="bg-white h-[36.5rem] w-[35rem] rounded-2xl shadow-2xl"
+                className="bg-white h-[31rem] w-[35rem] rounded-2xl shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 <form className='flex flex-col gap-3 p-5' /*style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}*/>
                     <div className='flex flex-row'>
-                        <h2 className='text-3xl font-semibold text-gray-800'>タスク編集</h2>
+                        <h2 className='text-3xl font-semibold text-gray-800'>サブタスク作成</h2>
                         <button className="ml-auto"
                             onClick={closeModal}
                         >
@@ -150,7 +148,7 @@ const CreateSubtaskModal: React.FC<Props> = ({
                         </button>
                     </div>
                     <label className="flex flex-col">
-                        <span className="mb-1 text-sm font-medium text-gray-700">タスク名(20文字まで)</span>
+                        <span className="mb-1 text-sm font-medium text-gray-700">サブタスク名(20文字まで)</span>
                         <input type="text" value={title} onChange={handletitleChange}
                             className={`p-2 border border-gray-300 rounded-md ${errors.title ? "border-red-500" : "border-gray-300"}`} />
                         <FieldError message={errors.title} />
