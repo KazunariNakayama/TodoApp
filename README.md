@@ -1,115 +1,132 @@
 # TodoApp
 
-A modern task management application built with React and Node.js, featuring task and subtask management capabilities.
-
-## Features
-
-- Create, read, update, and delete tasks
-- Manage subtasks for each task
-- Modern and responsive UI with Tailwind CSS
-- RESTful API backend
-- TypeScript support
-- Prisma ORM for database management
-
-## Tech Stack
-
-### Frontend
-- React
-- Tailwind CSS
-- Axios for API calls
-
-### Backend
-- Node.js
-- Express
-- TypeScript
-- Prisma ORM
-- PostgreSQL
-
-## Getting Started
-
-### Prerequisites
-- Node.js (v14 or higher)
-- pnpm
-- PostgreSQL
-
-### Installation
-
-1. Clone the repository
-```bash
-git clone [repository-url]
-cd TodoApp
-```
-
-2. Install dependencies
-```bash
-# Install backend dependencies
-cd backend
-pnpm install
-
-# Install frontend dependencies
-cd ../frontend
-pnpm install
-```
-
-3. Set up the database
-```bash
-cd backend
-pnpm prisma migrate dev
-```
-
-4. Start the development servers
-
-Backend:
-```bash
-cd backend
-pnpm dev
-```
-
-Frontend:
-```bash
-cd frontend
-pnpm start
-```
+A full-stack Todo application built with React, TypeScript, and Node.js.
 
 ## Project Structure
 
 ```
 TodoApp/
-├── backend/
+├── frontend/          # React frontend application
 │   ├── src/
-│   │   ├── routes/
-│   │   ├── model/
-│   │   └── utils/
-│   └── prisma/
-└── frontend/
+│   │   ├── features/  # Feature-based modules
+│   │   │   ├── tasks/ # Task management feature
+│   │   │   └── auth/  # Authentication feature
+│   │   ├── components/# Shared components
+│   │   ├── hooks/     # Custom React hooks
+│   │   ├── utils/     # Utility functions
+│   │   └── App.tsx    # Root component
+│   └── package.json   # Frontend dependencies
+│
+└── backend/           # Node.js backend application
     ├── src/
-    │   ├── components/
-    │   └── api/
-    └── public/
+    │   ├── routes/    # API routes
+    │   ├── services/  # Business logic
+    │   ├── models/    # Data models
+    │   └── server.ts  # Server entry point
+    ├── prisma/        # Database schema and migrations
+    └── package.json   # Backend dependencies
 ```
 
-## API Endpoints
+## Prerequisites
 
-### Tasks
-- GET /api/tasks - Get all tasks
-- POST /api/tasks - Create a new task
-- PUT /api/tasks/:id - Update a task
-- DELETE /api/tasks/:id - Delete a task
+- Node.js (v18 or higher)
+- npm or yarn
+- PostgreSQL
 
-### Subtasks
-- GET /api/subtasks - Get all subtasks
-- POST /api/subtasks - Create a new subtask
-- PUT /api/subtasks/:id - Update a subtask
-- DELETE /api/subtasks/:id - Delete a subtask
+## Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd TodoApp
+```
+
+### 2. Backend Setup
+
+```bash
+cd backend
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your database credentials
+
+# Set up the database
+npx prisma migrate dev
+
+# Start the development server
+npm run dev
+```
+
+### 3. Frontend Setup
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+## Development
+
+### Backend Development
+
+- The backend runs on `http://localhost:3000`
+- API documentation is available at `http://localhost:3000/api-docs`
+- Database migrations are managed with Prisma
+
+### Frontend Development
+
+- The frontend runs on `http://localhost:5173`
+- Uses Vite for fast development and building
+- Implements feature-based architecture for better code organization
+
+## Available Scripts
+
+### Backend
+
+- `npm run dev`: Start development server
+- `npm run build`: Build for production
+- `npm start`: Start production server
+- `npm run lint`: Run ESLint
+- `npm run test`: Run tests
+
+### Frontend
+
+- `npm run dev`: Start development server
+- `npm run build`: Build for production
+- `npm run preview`: Preview production build
+- `npm run lint`: Run ESLint
+- `npm run test`: Run tests
+
+## Environment Variables
+
+### Backend (.env)
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/todoapp"
+JWT_SECRET="your-jwt-secret"
+PORT=3000
+```
+
+### Frontend (.env)
+
+```env
+VITE_API_URL="http://localhost:3000"
+```
 
 ## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Create a new branch for your feature
+2. Make your changes
+3. Submit a pull request
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT
