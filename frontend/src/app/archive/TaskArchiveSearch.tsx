@@ -23,7 +23,6 @@ const TaskArchiveSearch = ({ fetchTasks }: TaskSearchProps) => {
         setKeyword(event.target.value);
     };
     const handledateChange = (due_date: Date | null) => {
-        // if (!due_date) return;
         setDue_date(due_date);
     };
     const handlestatusChange = (selected: { value: string; label: string } | null) => {

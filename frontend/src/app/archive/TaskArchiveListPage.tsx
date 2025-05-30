@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import TaskList from './TaskArchiveList.tsx';
-import { Task } from '../types.ts';
 import TaskArchiveSearch from './TaskArchiveSearch.tsx';
 import "react-datepicker/dist/react-datepicker.css"
 import useFetchTasks from '../huck/useTaskFetch.ts';
@@ -8,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 
 const TaskArchiveList = () => {
-  const [tasks, setTasks] = useState<Task[]>();
   const [loading, setLoading] = useState(true);
 
   //検索関連の宣言

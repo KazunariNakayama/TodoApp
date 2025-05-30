@@ -23,19 +23,16 @@ export const useFetchTasks = () => {
         }).toString();
         console.log('fetchTasks called with params:', params);
         console.log('taskFetch: query =', query);
-        console.log('fetchみちゃうよ！！', query);
+        console.log('fetch', query);
 
 
         setFLoading(true);
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/tasks/fetch?${query}`);
         const data = await response.json();
-        console.log('fetchみちゃうよ！！', data);
+        console.log('fetch', data);
         setTasks(data);
         setFLoading(false);
     };
-    // console.log('taskFetch: ftasks =', ftasks);
-    // console.log('taskFetch: floading =', floading);
-
 
     return { ftasks, floading, fetchTasks };
 };

@@ -84,7 +84,6 @@ const TaskList = ({ tasks, loading, onArchive }: MyTableProps) => {
     return (
         <div className="bg-white border-4 border-l-gray-300  rounded-2xl shadow-xl  mt-9">
             <DataTable
-                // title="タスク一覧"
                 columns={columns}
                 data={tasks}
                 progressPending={loading}

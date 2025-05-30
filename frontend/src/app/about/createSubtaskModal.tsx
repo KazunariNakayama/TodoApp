@@ -83,12 +83,7 @@ const CreateSubtaskModal: React.FC<Props> = ({
         e.preventDefault();
         if (isValid) {
             onCreate({ title, detail, due_date, status });
-        } //else {
-        //   const confirmed = window.confirm(`${errors.title} ${errors.detail} ${errors.due_date} ${errors.status}`);
-        //   if (confirmed) {
-        //     console.log('フォームに戻る');
-        //   }
-        // }
+        }
     }
 
     const handletitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,8 +138,6 @@ const CreateSubtaskModal: React.FC<Props> = ({
         >
             <div
                 className="bg-white h-[36.5rem] w-[35rem] rounded-2xl shadow-2xl"
-                //NOTE:コンポーネントの外側をクリックしたときにモーダルを閉じることができるように
-                //NOTE:これは内側をクリックしてもモーダルが閉じないようにするための処理
                 onClick={(e) => e.stopPropagation()}
             >
                 <form className='flex flex-col gap-3 p-5' /*style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}*/>

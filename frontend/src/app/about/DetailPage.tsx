@@ -91,11 +91,7 @@ const App = () => {
           method: `DELETE`,
         }
       );
-
       if (!response.ok) throw new Error("Failed to Delete Task");
-      // const data = await response.json();
-      // setTasks(data); // ← これが App の状態を更新！
-
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/tasks/fetch`
@@ -114,8 +110,6 @@ const App = () => {
       setLoading(false);
     }
   };
-
-  // <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />;
 
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
@@ -150,10 +144,6 @@ const App = () => {
         window.alert("タスクの変更に失敗しました")
         throw new Error("Failed to Update Task");
       }
-
-      // const data = await response.json();
-      // setTasks(data); // ← これが App の状態を更新！
-
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/tasks/fetch?id=${id}`
@@ -193,15 +183,11 @@ const App = () => {
       );
       // うまく行きそうにないなら、reloadで対応予定
       window.location.reload();
-
       if (!response.ok) {
         window.alert("サブタスクの作成に失敗しました")
         window.location.reload();
         throw new Error("Failed to Create SubTask");
       }
-      // const data = await response.json();
-      // setTasks(data); // ← これが App の状態を更新！
-
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/tasks/subtasks/${id}`
@@ -232,7 +218,6 @@ const App = () => {
           >
             ← タスク一覧に戻る
           </button>
-
           <div className='flex flex-row mb-5 mt-5'>
             <h2 className='text-3xl font-semibold text-gray-800 ml-2'>{tasks[0]?.title || "error"}</h2>
             <button

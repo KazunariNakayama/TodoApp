@@ -38,7 +38,6 @@ const TaskDetailBlock = ({ tasks, loading, onDelete }: MyTableProps) => {
         {
             name: `期日`,
             selector: (row: Task) => row.due_date,
-            //cell: (row: Task) => format(new Date(row.due_date), 'yyyy年MM月dd日', { locale: ja }),
             sortable: true,
             filter: true,
         },
