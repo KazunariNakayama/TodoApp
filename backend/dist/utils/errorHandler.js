@@ -1,6 +1,9 @@
-import { CustomError } from './customError';
-export const handleError = (error, c) => {
-    if (error instanceof CustomError) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.handleError = void 0;
+const customError_1 = require("./customError");
+const handleError = (error, c) => {
+    if (error instanceof customError_1.CustomError) {
         return c.json({
             error: error.message,
             statusCode: error.statusCode
@@ -13,3 +16,4 @@ export const handleError = (error, c) => {
         }, 500);
     }
 };
+exports.handleError = handleError;
