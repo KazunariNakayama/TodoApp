@@ -23,7 +23,6 @@ const TaskArchiveSearch = ({ fetchTasks }: TaskSearchProps) => {
         setKeyword(event.target.value);
     };
     const handledateChange = (due_date: Date | null) => {
-        // if (!due_date) return;
         setDue_date(due_date);
     };
     const handlestatusChange = (selected: { value: string; label: string } | null) => {
@@ -43,7 +42,6 @@ const TaskArchiveSearch = ({ fetchTasks }: TaskSearchProps) => {
     const filteredOptions = options.find((opt) => opt.value === status.toLowerCase())
 
     const handleSubmit = (event) => {
-        console.log('TaskSearchのlog', keyword, due_date, status)
         event.preventDefault();
         fetchTasks({
             keyword,
@@ -51,7 +49,6 @@ const TaskArchiveSearch = ({ fetchTasks }: TaskSearchProps) => {
             status,
             visibility,
         });
-        console.log('keyword', keyword);
     }
 
     return (

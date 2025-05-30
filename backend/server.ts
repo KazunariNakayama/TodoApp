@@ -3,7 +3,6 @@ import { Hono } from 'hono';
 import tasks from './src/routes/tasks';
 import { cors } from 'hono/cors';
 import { handleError } from './src/utils/errorHandler';
-import { HTTPException } from 'hono/http-exception';
 
 const app = new Hono();
 

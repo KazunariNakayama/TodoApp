@@ -20,12 +20,14 @@ const App = () => {
   const [due_date, setDue_date] = useState(initialDate);
   const [status, setStatus] = useState<"TODO" | "IN_PROGRESS" | "DONE">("TODO");
   const { id } = useParams();
-
-  console.log("取得したID", id);
   const navigate = useNavigate();
-
   const handleBack = () => {
-    navigate("/");
+    if (tasks[0]?.visibility == "ARCHIVED") {
+      navigate("/archived");
+    }
+    else {
+      navigate("/");
+    }
   };
 
 
@@ -41,20 +43,23 @@ const App = () => {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/api/tasks/fetch?id=${id}`
       );
-      console.log("検索ID", id);
       const data = await response.json();
-
       if (!response.ok || data.length === 0) {
         navigate("/404", { replace: true });
         console.log(response);
         throw new Error("Failed to fetch tasks");
       }
       setTasks(data);
+      if (data[0]?.visibility === "ARCHIVED") {
+        setShowModal(false);
+        setShowSubModal(false);
+      }
     } catch (err) {
       console.error("Failed to fetch tasks:", err);
     } finally {
       setLoading(false);
     }
+
   };
 
   const fetchSubTasks = async () => {
@@ -63,7 +68,6 @@ const App = () => {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/api/tasks/subtask/${id}`
       );
-      console.log("検索ID", id);
       if (!response.ok) throw new Error("Failed to fetch subtasks");
       const subtaskdata = await response.json();
       setSubTasks(subtaskdata);
@@ -73,13 +77,6 @@ const App = () => {
       setLoading2(false);
     }
   };
-
-  const options = [
-    { value: "todo", label: "未完了" },
-    { value: "in_progress", label: "進行中" },
-    { value: "Done", label: "完了" },
-    { value: "", label: "選択を外す" },
-  ];
 
   const handleDelete = async (params: string) => {
     console.log("id:", params);
@@ -91,11 +88,7 @@ const App = () => {
           method: `DELETE`,
         }
       );
-
       if (!response.ok) throw new Error("Failed to Delete Task");
-      // const data = await response.json();
-      // setTasks(data); // ← これが App の状態を更新！
-
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/tasks/fetch`
@@ -115,15 +108,19 @@ const App = () => {
     }
   };
 
-  // <MyTable tasks={tasks ?? []} loading={loading} onDelete={handleDelete} />;
-
   const [showModal, setShowModal] = useState(false);
   const ShowModal = () => {
     setShowModal(true);
+    if (tasks[0]?.visibility === "ARCHIVED") {
+      setShowModal(false);
+    }
   };
   const [showSubModal, setShowSubModal] = useState(false);
   const ShowSubModal = () => {
     setShowSubModal(true);
+    if (tasks[0]?.visibility === "ARCHIVED") {
+      setShowSubModal(false);
+    }
   };
 
   const handleUpdate = async (params: {
@@ -132,7 +129,6 @@ const App = () => {
     due_date: string;
     status: string;
   }) => {
-    console.log("params:", params);
     setLoading(true);
     try {
       const response = await fetch(
@@ -150,10 +146,6 @@ const App = () => {
         window.alert("タスクの変更に失敗しました")
         throw new Error("Failed to Update Task");
       }
-
-      // const data = await response.json();
-      // setTasks(data); // ← これが App の状態を更新！
-
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/tasks/fetch?id=${id}`
@@ -178,7 +170,6 @@ const App = () => {
     detail: string;
     status: string;
   }) => {
-    console.log("params:", params);
     setLoading(true);
     try {
       const response = await fetch(
@@ -193,15 +184,11 @@ const App = () => {
       );
       // うまく行きそうにないなら、reloadで対応予定
       window.location.reload();
-
       if (!response.ok) {
         window.alert("サブタスクの作成に失敗しました")
         window.location.reload();
         throw new Error("Failed to Create SubTask");
       }
-      // const data = await response.json();
-      // setTasks(data); // ← これが App の状態を更新！
-
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/tasks/subtasks/${id}`
@@ -230,17 +217,19 @@ const App = () => {
             onClick={handleBack}
             className="ml-auto mt-3 mb-3 mr-2 font-bold text-black bg-white border border-black px-4 py-1 rounded hover:bg-black hover:text-white transition"
           >
-            ← タスク一覧に戻る
+            ← 一覧に戻る
           </button>
-
           <div className='flex flex-row mb-5 mt-5'>
             <h2 className='text-3xl font-semibold text-gray-800 ml-2'>{tasks[0]?.title || "error"}</h2>
-            <button
-              onClick={ShowModal}
-              className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"
-            >
-              ＋ タスク編集
-            </button>
+            {tasks[0]?.visibility !== "ARCHIVED" && (
+              <button
+                onClick={ShowModal}
+                className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"
+              >
+                ＋ タスク編集
+              </button>
+            )}
+
           </div>
           {tasks && (
             <TaskModal
@@ -254,13 +243,14 @@ const App = () => {
           <br />
           <div className='flex flex-row mb-5 mt-5'>
             <h2 className='text-3xl font-semibold text-gray-800 ml-2'>サブタスク</h2>
-            <button
-              onClick={ShowSubModal}
-              className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"
-            >
-              ＋ サブタスク追加
-            </button>
-
+            {tasks[0]?.visibility !== "ARCHIVED" && (
+              <button
+                onClick={ShowSubModal}
+                className="ml-auto mr-2 font-bold text-black bg-white border border-black px-4 py-2 rounded hover:bg-black hover:text-white transition"
+              >
+                ＋ サブタスク追加
+              </button>
+            )}
           </div>
           {tasks && (
             <CreateSubtaskModal

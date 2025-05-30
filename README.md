@@ -63,9 +63,10 @@ pnpm install
 cd backend
 
 # Set up environment variables
-#cp .env.example .env
 touch .env
-# Edit .env with your database credentials
+# Add the following to .env:
+# Database Configuration
+# DATABASE_URL="postgresql://user:password@localhost:5432/todoapp"
 
 # Set up the database
 pnpm prisma migrate dev
@@ -88,7 +89,7 @@ touch .env
 pnpm run build
 
 # Start the development server
-pnpm dev
+pnpm start
 ```
 
 ## Development
@@ -128,9 +129,17 @@ pnpm dev
 ### Backend (.env)
 
 ```env
+# Database Configuration
 DATABASE_URL="postgresql://user:password@localhost:5432/todoapp"
+
+# JWT Configuration
 JWT_SECRET="your-jwt-secret"
+
+# Server Configuration
 PORT=3000
+
+# CORS Configuration
+CORS_ORIGIN="http://localhost:5173"
 ```
 
 ### Frontend (.env)

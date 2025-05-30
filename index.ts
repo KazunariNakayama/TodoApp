@@ -18,6 +18,5 @@ main()
   })
 
 const app = new Hono()
-console.log('Hello World')
 
 export default app // for Cloudflare Workers or Bun

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import TaskList from './TaskArchiveList.tsx';
-import { Task } from '../types.ts';
 import TaskArchiveSearch from './TaskArchiveSearch.tsx';
 import "react-datepicker/dist/react-datepicker.css"
 import useFetchTasks from '../huck/useTaskFetch.ts';
@@ -8,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 
 const TaskArchiveList = () => {
-  const [tasks, setTasks] = useState<Task[]>();
   const [loading, setLoading] = useState(true);
 
   //検索関連の宣言
@@ -19,7 +17,6 @@ const TaskArchiveList = () => {
   }, []);
 
   const handleActive = async (id: string) => {
-    console.log('id:', id);
     setLoading(true);
     try {
       const response = await fetch(
@@ -48,7 +45,6 @@ const TaskArchiveList = () => {
 
 
   const handleDelete = async (params: string) => {
-    console.log('id:', params);
     setLoading(true);
     try {
       const response = await fetch(
@@ -85,7 +81,7 @@ const TaskArchiveList = () => {
         ← タスク一覧に戻る
       </button>
       <div className='flex flex-row mb-5 mt-5'>
-        <h2 className='text-3xl font-semibold text-gray-800 ml-2'>タスク管理</h2>
+        <h2 className='text-3xl font-semibold text-gray-800 ml-2'>アーカイブ タスク</h2>
 
       </div>
       <div className='ml-2'>

@@ -44,7 +44,6 @@ const TaskModal = ({ task, modalbool, setModalbool, onCreate }: Props) => {
 
 
     useEffect(() => {
-        console.log("UpdateForm task: ", task[0]);
         if (task[0]) {
             setTitle(task[0].title ?? '');
             setDetail(task[0].detail ?? '');

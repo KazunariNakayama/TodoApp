@@ -4,10 +4,6 @@ import ReactDOM from 'react-dom';
 import App from './App.js';
 import TaskListPage from './app/home/TaskListPage.tsx';
 import './index.css';
-//import App from './App.tsx';
-
-
-
 
 ReactDOM.render(
   <React.StrictMode>
@@ -15,9 +11,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-// ReactDOM.createRoot(document.getElementById('root')).render(
-//   <React.StrictMode>
-//     <TaskListPage />
-//   </React.StrictMode>
-// );
