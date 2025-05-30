@@ -2,11 +2,13 @@
 import { serve } from '@hono/node-server'
 import app from './server'
 
-// 明示的に型付きで処理
 const rawPort = process.env.PORT
-const port = rawPort ? Number(rawPort) : 3000
+const parsedPort = Number(rawPort)
 
-if (isNaN(port)) {
+// isNaN() ではなく Number.isNaN() を使用し、null/undefined/空文字に強くなる
+const port = !rawPort || Number.isNaN(parsedPort) ? 3000 : parsedPort
+
+if (Number.isNaN(port)) {
   console.error(`❌ Invalid port value: "${rawPort}"`)
   process.exit(1)
 }
