@@ -1,8 +1,8 @@
 // src/server.ts
 import { Hono } from 'hono';
-import tasks from './src/routes/tasks';
+import tasks from './routes/tasks';
 import { cors } from 'hono/cors';
-import { handleError } from './src/utils/errorHandler';
+import { handleError } from './utils/errorHandler';
 
 const app = new Hono();
 
