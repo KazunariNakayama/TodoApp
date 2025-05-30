@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "ESNext",
+    "module": "CommonJS",              // ← Node.js + Renderで安定
     "moduleResolution": "Node",
     "outDir": "dist",
+    "rootDir": "src",                  // ← これで明示的にsrc→distに
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

@@ -1,122 +1,82 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // src/routes/tasks.ts
-import { Hono } from 'hono';
-import { PrismaClient } from '@prisma/client';
-import { getTasks } from '../model/tasksModel';
-import { CustomError } from '../utils/customError';
-const prisma = new PrismaClient();
-const tasks = new Hono();
-// タスク一覧の取得
-tasks.get('/', async (c) => {
-    //as any[]で、c.json(tasks)に配列型で返すように指定
-    //awaitを実行することで、内部的に非同期で問い合わせを行い、結果が返るまで待ってもらいます
-    //getTasksは、../model/tasksModel.tsで定義した関数
-    const tasks = await getTasks();
-    if (!tasks) {
-        throw new CustomError('Failed to fetch tasks', 400);
-    }
+const hono_1 = require("hono");
+const tasksModel_1 = require("../model/tasksModel");
+const customError_1 = require("../utils/customError");
+const tasks = new hono_1.Hono();
+// // タスク一覧をsearchで取得
+tasks.get('/fetch', async (c) => {
+    const id = c.req.query('id') || ''; // 未指定でも安全なように空文字に
+    const title = c.req.query('title') || ''; // 未指定でも安全なように空文字に
+    const due_date = c.req.query('due_date') || ''; // 未指定でも安全なように空文字に
+    const status = c.req.query('status') || ''; // 未指定でも安全なように空文字に
+    const visibility = c.req.query('visibility') || ''; // 未指定でも安全なように空文字に
+    const tasks = await (0, tasksModel_1.getTasksSearch)(id, title, status, due_date, visibility);
     return c.json(tasks);
-    /*
-    const tasks = await prisma.task.findMany({
-      include: {
-        subtasks: true
-      }
-    });
-    return c.json(tasks);
-  */
-    //console.error('Error fetching tasks:', error);
-    //return c.json({ error: 'Failed to fetch tasks' }, 500);
 });
 // タスクの作成
 tasks.post('/', async (c) => {
-    try {
-        const body = await c.req.json();
-        const task = await prisma.task.create({
-            data: {
-                title: body.title,
-                detail: body.detail,
-                due_date: new Date(body.due_date),
-                status: 'TODO'
-            }
-        });
-        return c.json(task);
+    const body = await c.req.json();
+    if (body.title == "") {
+        throw new customError_1.CustomError("Task title is not written", 500);
     }
-    catch (error) {
-        console.error('Error creating task:', error);
-        return c.json({ error: 'Failed to create task' }, 500);
+    else if (body.detail == "") {
+        throw new customError_1.CustomError("Task detail is not written", 500);
     }
+    const task = await (0, tasksModel_1.createTask)(body);
+    return c.json(task);
 });
 // タスクの更新
 tasks.put('/:id', async (c) => {
-    try {
-        const id = parseInt(c.req.param('id'));
-        const body = await c.req.json();
-        const task = await prisma.task.update({
-            where: { id },
-            data: {
-                title: body.title,
-                detail: body.detail,
-                due_date: new Date(body.due_date),
-                status: body.status
-            }
-        });
-        return c.json(task);
+    const id = c.req.param('id');
+    const body = await c.req.json();
+    const task = await (0, tasksModel_1.updateTask)(id, body);
+    if (!task || task.length == 0) {
+        throw new customError_1.CustomError("Task not found", 404);
     }
-    catch (error) {
-        console.error('Error updating task:', error);
-        return c.json({ error: 'Failed to update task' }, 500);
+    return c.json(task[0]);
+});
+// タスクのアーカイブの変更処理
+tasks.put('/archive/:id', async (c) => {
+    const id = c.req.param('id');
+    const body = await c.req.json();
+    const task = await (0, tasksModel_1.updateVisibility)(id, body);
+    if (!task || task.length == 0) {
+        throw new customError_1.CustomError("Task not found", 404);
     }
+    return c.json(task[0]);
 });
 // タスクの削除
 tasks.delete('/:id', async (c) => {
-    try {
-        const id = parseInt(c.req.param('id'));
-        await prisma.task.delete({
-            where: { id }
-        });
-        return c.json({ message: 'Task deleted' });
+    const id = c.req.param('id');
+    const tasks = await (0, tasksModel_1.getTasksSearch)(id, '', '', '', 'ARCHIVED');
+    if (!tasks || tasks.length === 0) {
+        throw new customError_1.CustomError("Only archived tasks can be deleted or task not found", 400);
     }
-    catch (error) {
-        console.error('Error deleting task:', error);
-        return c.json({ error: 'Failed to delete task' }, 500);
+    const result = await (0, tasksModel_1.deleteTask)(id);
+    if (!result || result.length === 0) {
+        throw new customError_1.CustomError("Task not found", 404);
     }
+    return c.json(result[0]);
+});
+//NOTE:指定タスクのサブタスクの取得
+tasks.get('/subtask/:id', async (c) => {
+    const id = c.req.param('id') || '';
+    const subtasks = await (0, tasksModel_1.getSubTasks)(id);
+    return c.json(subtasks);
 });
 // サブタスクの一覧取得
-tasks.get('/:id/subtasks', async (c) => {
-    try {
-        const taskId = parseInt(c.req.param('id'));
-        const subtasks = await prisma.$queryRaw `SELECT * FROM "Subtask" WHERE "taskId" = ${taskId}`;
-        /*
-        const subtasks = await prisma.subtask.findMany({
-          where: {
-            taskId: taskId
-          }
-        });
-        */
-        return c.json(subtasks);
-    }
-    catch (error) {
-        console.error('Error fetching subtasks:', error);
-        return c.json({ error: 'Failed to fetch subtasks' }, 500);
-    }
+tasks.get('/subtasks/:id', async (c) => {
+    const taskId = c.req.param('id');
+    const subtasks = await (0, tasksModel_1.getSubTasks)(taskId);
+    return c.json(subtasks);
 });
 // サブタスクの作成
-tasks.post('/:id/subtasks', async (c) => {
-    try {
-        const taskId = parseInt(c.req.param('id'));
-        const body = await c.req.json();
-        const subtask = await prisma.subtask.create({
-            data: {
-                taskId: taskId,
-                title: body.title,
-                detail: body.detail,
-                status: body.status
-            }
-        });
-        return c.json(subtask);
-    }
-    catch (error) {
-        console.error('Error creating subtask:', error);
-        return c.json({ error: 'Failed to create subtask' }, 500);
-    }
+tasks.post('/subtasks/:id', async (c) => {
+    const taskId = c.req.param('id');
+    const body = await c.req.json();
+    const subtask = await (0, tasksModel_1.createSubtask)(taskId, body);
+    return c.json(subtask);
 });
-export default tasks;
+exports.default = tasks;
