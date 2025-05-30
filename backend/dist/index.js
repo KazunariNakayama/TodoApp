@@ -1,14 +1,13 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-// src/index.ts
+const hono_1 = require("hono");
 const node_server_1 = require("@hono/node-server");
-const server_1 = __importDefault(require("./server"));
-require("dotenv/config");
-//const port = Number(process.env.PORT || 3000);
+const app = new hono_1.Hono();
+app.get('/', (c) => c.text('Hello from Hono on Render!'));
+// ✅ Renderから与えられるPORTを使用
 const port = parseInt(process.env.PORT || '3000', 10);
-(0, node_server_1.serve)({ fetch: server_1.default.fetch, port }, ({ port }) => {
-    console.log(`🚀  Server running on http://localhost:${port}`);
+console.log(`🚀 Server is running on http://localhost:${port}`);
+(0, node_server_1.serve)({
+    fetch: app.fetch,
+    port, // ← ✅ これでクラッシュしない
 });
